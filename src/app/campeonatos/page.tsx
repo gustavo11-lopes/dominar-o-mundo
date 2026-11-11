@@ -11,6 +11,8 @@ import {
   parsePage,
   Pill,
   type SearchParams,
+  Reveal,
+  SkeletonExit,
 } from "@/components/ui";
 import { formatRange } from "@/lib/format";
 import { getTournamentList, type TournamentTab } from "@/server/queries/tournaments";
@@ -55,7 +57,7 @@ async function Tournaments({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2">
           {items.map((t) => (
             <li key={t.slug}>
-              <Link href={`/campeonatos/${t.slug}`} className="flex h-full gap-3 panel-link p-4">
+              <Link href={`/campeonatos/${t.slug}`} className="flex h-full gap-3 spot panel-link p-4">
                 <Logo src={t.leagueImageUrl} name={t.league} size={40} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{t.name}</span>
@@ -84,8 +86,16 @@ export default function CampeonatosPage({ searchParams }: { searchParams: Search
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle subtitle="Campeonatos com partidas acompanhadas pelo site.">Campeonatos</PageTitle>
-      <Suspense fallback={<ListSkeleton />}>
-        <Tournaments searchParams={searchParams} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <Tournaments searchParams={searchParams} />
+        </Reveal>
       </Suspense>
     </main>
   );

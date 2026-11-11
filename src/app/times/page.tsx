@@ -12,6 +12,9 @@ import {
   parseQuery,
   SearchForm,
   type SearchParams,
+  Reveal,
+  SkeletonExit,
+  Morph,
 } from "@/components/ui";
 import { getTeamList } from "@/server/queries/teams";
 
@@ -48,8 +51,10 @@ async function Teams({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((t) => (
             <li key={t.slug}>
-              <Link href={`/times/${t.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
-                <Logo src={t.logoUrl} name={t.name} size={36} />
+              <Link href={`/times/${t.slug}`} className="flex items-center gap-3 spot panel-link px-4 py-3">
+                <Morph name={`team-${t.slug}`}>
+                  <Logo src={t.logoUrl} name={t.name} size={36} />
+                </Morph>
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{t.name}</span>
                   <span className="block truncate text-xs text-muted">
@@ -71,8 +76,16 @@ export default function TimesPage({ searchParams }: { searchParams: SearchParams
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle>Times</PageTitle>
-      <Suspense fallback={<ListSkeleton />}>
-        <Teams searchParams={searchParams} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <Teams searchParams={searchParams} />
+        </Reveal>
       </Suspense>
     </main>
   );

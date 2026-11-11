@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Big_Shoulders, IBM_Plex_Sans } from "next/font/google";
 import Link from "next/link";
+import { Suspense } from "react";
+import { LiveTicker } from "@/components/live-ticker";
+import { SpotlightCursor } from "@/components/spotlight-cursor";
 import "./globals.css";
 
 const shoulders = Big_Shoulders({ variable: "--font-shoulders", subsets: ["latin"], weight: "variable" });
@@ -29,6 +32,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Pular para o conteúdo
         </a>
         <header className="sticky top-0 z-40 border-b border-line/70 bg-bg/70 backdrop-blur-xl">
+          <Suspense fallback={null}>
+            <LiveTicker />
+          </Suspense>
           <nav
             aria-label="Principal"
             className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-3"
@@ -45,6 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </nav>
         </header>
+        <SpotlightCursor />
         <div id="conteudo" className="flex-1">
           {children}
         </div>

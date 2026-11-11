@@ -45,6 +45,7 @@ export async function GET(request: Request) {
     }
   }
 
-  if (changed) revalidateTag(DATA_TAG, "max");
+  // Expira na hora: placar e status novos aparecem já na próxima visita.
+  if (changed) revalidateTag(DATA_TAG, { expire: 0 });
   return Response.json(summary, { status: failed ? 502 : 200 });
 }

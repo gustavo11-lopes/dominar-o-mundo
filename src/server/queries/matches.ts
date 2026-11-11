@@ -14,6 +14,8 @@ export type TeamView = { slug: string; name: string; acronym: string | null; log
 
 export type MatchView = {
   id: string;
+  /** Id da partida no provedor, para casar com o placar ao vivo. */
+  externalId: string;
   status: MatchStatus;
   scheduledAt: string | null;
   bestOf: number;
@@ -51,6 +53,7 @@ export const toTeamView = (t: TeamRow): TeamView => ({
 
 export const matchSelect = {
   id: true,
+  externalId: true,
   status: true,
   scheduledAt: true,
   bestOf: true,
@@ -72,6 +75,7 @@ type Row = Prisma.MatchGetPayload<{ select: typeof matchSelect }>;
 export function toMatchView(row: Row): MatchView {
   return {
     id: row.id,
+    externalId: row.externalId,
     status: row.status,
     scheduledAt: row.scheduledAt?.toISOString() ?? null,
     bestOf: row.bestOf,

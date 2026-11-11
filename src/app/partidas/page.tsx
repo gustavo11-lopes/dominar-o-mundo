@@ -10,6 +10,8 @@ import {
   parsePage,
   Pill,
   type SearchParams,
+  Reveal,
+  SkeletonExit,
 } from "@/components/ui";
 import { formatDay, formatTime, groupByDay } from "@/lib/format";
 import { getLastSync, getMatchList, type MatchTab } from "@/server/queries/matches";
@@ -103,8 +105,16 @@ export default function PartidasPage({ searchParams }: { searchParams: SearchPar
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle>Partidas</PageTitle>
-      <Suspense fallback={<ListSkeleton rows={8} />}>
-        <Matches searchParams={searchParams} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton rows={8} />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <Matches searchParams={searchParams} />
+        </Reveal>
       </Suspense>
     </main>
   );

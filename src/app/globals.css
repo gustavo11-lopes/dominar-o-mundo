@@ -284,3 +284,108 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Placar que acabou de mudar: acende em vermelho e volta. */
+@keyframes score-flash {
+  0% {
+    color: #fff;
+    text-shadow: 0 0 24px var(--accent);
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.score-flash {
+  display: inline-block;
+  animation: score-flash 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Faixa de partidas ao vivo no topo: rola como letreiro quando não cabe. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Luz que segue o cursor sobre os blocos (posição definida pelo SpotlightCursor). */
+.spot {
+  position: relative;
+  isolation: isolate;
+}
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms;
+  background: radial-gradient(
+    360px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--accent) 16%, transparent),
+    transparent 60%
+  );
+}
+.spot:hover::before {
+  opacity: 1;
+}
+
+/* Transições entre páginas e de carregamento (React ViewTransition). */
+:root {
+  --duration-exit: 150ms;
+  --duration-enter: 220ms;
+  --duration-move: 420ms;
+}
+::view-transition-old(.slide-down) {
+  animation:
+    var(--duration-exit) ease-out both vt-fade reverse,
+    var(--duration-exit) ease-out both vt-slide reverse;
+}
+::view-transition-new(.slide-up) {
+  animation:
+    var(--duration-enter) ease-in var(--duration-exit) both vt-fade,
+    var(--duration-move) cubic-bezier(0.2, 0.8, 0.2, 1) both vt-slide;
+}
+::view-transition-group(.morph) {
+  animation-duration: 420ms;
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+@keyframes vt-fade {
+  from {
+    filter: blur(4px);
+    opacity: 0;
+  }
+}
+@keyframes vt-slide {
+  from {
+    transform: translateY(14px);
+  }
+}
+@keyframes vt-blur {
+  30% {
+    filter: blur(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .marquee {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}

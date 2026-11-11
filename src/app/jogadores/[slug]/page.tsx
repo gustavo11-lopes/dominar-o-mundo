@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
-import { Country, Empty, ListSkeleton, Logo } from "@/components/ui";
+import { Country, Empty, ListSkeleton, Logo, Reveal, SkeletonExit, Morph } from "@/components/ui";
 import { formatDate } from "@/lib/format";
 import { HeroHeader } from "@/components/hero-header";
 import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
@@ -30,7 +30,11 @@ async function PlayerContent({ params }: { params: Params }) {
     <>
       <HeroHeader
         backdrop={pickBackdrop(p.team?.slug ?? p.slug, backdrops)}
-        emblem={<Logo src={p.imageUrl} name={p.handle} size={112} rounded />}
+        emblem={
+          <Morph name={`player-${p.slug}`}>
+            <Logo src={p.imageUrl} name={p.handle} size={112} rounded />
+          </Morph>
+        }
         title={p.handle}
       >
         <p>{p.fullName ?? "Nome não informado"}</p>
@@ -97,8 +101,16 @@ async function PlayerContent({ params }: { params: Params }) {
 export default function PlayerPage({ params }: { params: Params }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <Suspense fallback={<ListSkeleton />}>
-        <PlayerContent params={params} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <PlayerContent params={params} />
+        </Reveal>
       </Suspense>
     </main>
   );

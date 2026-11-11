@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { countryName, flag } from "@/lib/format";
 
 export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -151,5 +152,32 @@ export function ListSkeleton({ rows = 6 }: { rows?: number }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/** Conteúdo que chega depois do carregamento: sobe e aparece (transição do React). */
+export function Reveal({ children }: { children: React.ReactNode }) {
+  return (
+    <ViewTransition enter="slide-up" default="none">
+      {children}
+    </ViewTransition>
+  );
+}
+
+/** Esqueleto de carregamento que desce e some quando o conteúdo chega. */
+export function SkeletonExit({ children }: { children: React.ReactNode }) {
+  return (
+    <ViewTransition exit="slide-down" default="none">
+      {children}
+    </ViewTransition>
+  );
+}
+
+/** Elemento que "voa" entre páginas com o mesmo nome (ex.: logo do time da lista para o cabeçalho). */
+export function Morph({ name, children }: { name: string; children: React.ReactNode }) {
+  return (
+    <ViewTransition name={name} share="morph" default="none">
+      {children}
+    </ViewTransition>
   );
 }

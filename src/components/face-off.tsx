@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDay, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
+import { Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Tilt } from "./tilt";
 
@@ -54,8 +55,8 @@ function Side({
         )}
       </div>
       {score !== null ? (
-        <span style={layer(30)} className={`display text-7xl tabular-nums sm:text-8xl ${dim ? "text-muted" : ""}`}>
-          {score}
+        <span style={layer(30)}>
+          <Score value={score} className={`display text-7xl tabular-nums sm:text-8xl ${dim ? "text-muted" : ""}`} />
         </span>
       ) : null}
     </div>

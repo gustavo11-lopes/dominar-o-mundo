@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
-import { ListSkeleton, Logo } from "@/components/ui";
+import { ListSkeleton, Logo, Reveal, SkeletonExit } from "@/components/ui";
 import { formatRange } from "@/lib/format";
 import { HeroHeader } from "@/components/hero-header";
 import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
@@ -156,8 +156,16 @@ async function TournamentContent({ params }: { params: Params }) {
 export default function TournamentPage({ params }: { params: Params }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <Suspense fallback={<ListSkeleton />}>
-        <TournamentContent params={params} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <TournamentContent params={params} />
+        </Reveal>
       </Suspense>
     </main>
   );

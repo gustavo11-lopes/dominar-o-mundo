@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { FaceOff } from "@/components/face-off";
 import { MatchList } from "@/components/match-row";
-import { Empty, ListSkeleton, Logo } from "@/components/ui";
+import { Empty, ListSkeleton, Logo, Reveal, SkeletonExit } from "@/components/ui";
 import { formatRange } from "@/lib/format";
 import { getHomeData } from "@/server/queries/home";
+import { getLiveScores, withLiveScore } from "@/server/queries/live";
 import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 
 function SectionHead({ id, title, href, linkLabel }: { id: string; title: string; href?: string; linkLabel?: string }) {
@@ -23,12 +24,13 @@ function SectionHead({ id, title, href, linkLabel }: { id: string; title: string
 }
 
 async function Home() {
-  const [data, backdrops] = await Promise.all([getHomeData(), getBackdrops()]);
+  const [data, backdrops, live] = await Promise.all([getHomeData(), getBackdrops(), getLiveScores()]);
+  const featured = data.featured ? withLiveScore(data.featured, live) : null;
 
   return (
     <>
-      {data.featured ? (
-        <FaceOff match={data.featured} live={data.featured.live} backdrop={pickBackdrop(data.featured.id, backdrops)} />
+      {featured ? (
+        <FaceOff match={featured} live={featured.status === "LIVE"} backdrop={pickBackdrop(featured.id, backdrops)} />
       ) : (
         <section className="mx-auto max-w-6xl px-4 py-16">
           <h1 className="display text-6xl uppercase">VALORANT competitivo</h1>
@@ -75,7 +77,10 @@ async function Home() {
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {data.tournaments.map((t) => (
                 <li key={t.slug}>
-                  <Link href={`/campeonatos/${t.slug}`} className="flex h-full flex-col gap-3 panel-link p-4 chamfer">
+                  <Link
+                    href={`/campeonatos/${t.slug}`}
+                    className="flex h-full flex-col gap-3 spot panel-link p-4 chamfer"
+                  >
                     <Logo src={t.leagueImageUrl} name={t.league} size={36} />
                     <span className="display text-2xl uppercase">{t.name}</span>
                     <span className="mt-auto text-xs text-muted">
@@ -96,7 +101,7 @@ async function Home() {
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {data.activeTeams.map((t) => (
                 <li key={t.slug}>
-                  <Link href={`/times/${t.slug}`} className="flex h-full items-center gap-3 panel-link p-3">
+                  <Link href={`/times/${t.slug}`} className="flex h-full items-center gap-3 spot panel-link p-3">
                     <Logo src={t.logoUrl} name={t.name} size={36} />
                     <span className="min-w-0">
                       <span className="block truncate font-medium">{t.name}</span>
@@ -128,8 +133,16 @@ function HomeSkeleton() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<HomeSkeleton />}>
-      <Home />
+    <Suspense
+      fallback={
+        <SkeletonExit>
+          <HomeSkeleton />
+        </SkeletonExit>
+      }
+    >
+      <Reveal>
+        <Home />
+      </Reveal>
     </Suspense>
   );
 }

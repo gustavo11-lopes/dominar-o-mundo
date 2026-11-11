@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { formatDayMonth, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
+import { getLiveScores, withLiveScore } from "@/server/queries/live";
+import { Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Logo } from "./ui";
 
@@ -53,7 +55,7 @@ function Stacked({ match }: { match: MatchView }) {
           <TeamLabel team={team} won={match.winner === side} />
         </TeamLink>
         {hasScore(match) ? (
-          <span className={`display w-6 text-right text-2xl tabular-nums ${loserTone(match, side)}`}>{score}</span>
+          <Score value={score} className={`display w-6 text-right text-2xl tabular-nums ${loserTone(match, side)}`} />
         ) : null}
       </div>
     );
@@ -85,9 +87,9 @@ function SideBySide({ match }: { match: MatchView }) {
       <span className="w-24 shrink-0 text-center">
         {hasScore(match) ? (
           <span className="display text-2xl tabular-nums" aria-label={`Placar ${match.scoreA} a ${match.scoreB}`}>
-            <span className={loserTone(match, "A")}>{match.scoreA}</span>
+            <Score value={match.scoreA} className={loserTone(match, "A")} />
             <span className="mx-1.5 text-muted">:</span>
-            <span className={loserTone(match, "B")}>{match.scoreB}</span>
+            <Score value={match.scoreB} className={loserTone(match, "B")} />
           </span>
         ) : (
           <span className="display text-xl text-muted">
@@ -132,7 +134,7 @@ export function MatchRow({
 }) {
   const live = match.status === "LIVE";
   return (
-    <li className={`border-b border-line px-4 py-3 last:border-b-0 ${live ? "border-l-2 border-l-live" : ""}`}>
+    <li className={`spot border-b border-line px-4 py-3 last:border-b-0 ${live ? "border-l-2 border-l-live" : ""}`}>
       <div className="mb-2.5 flex items-center gap-2 text-xs text-muted">
         <StatusBadge match={match} />
         {showDate && match.scheduledAt ? <span className="shrink-0">{formatDayMonth(match.scheduledAt)}</span> : null}
@@ -172,7 +174,7 @@ export function MatchRow({
   );
 }
 
-export function MatchList({
+export async function MatchList({
   matches,
   showDate,
   context,
@@ -181,10 +183,11 @@ export function MatchList({
   showDate?: boolean;
   context?: "full" | "stage";
 }) {
+  const live = matches.some((m) => m.status === "LIVE" || m.status === "SCHEDULED") ? await getLiveScores() : [];
   return (
     <ul className="@container panel">
       {matches.map((m) => (
-        <MatchRow key={m.id} match={m} showDate={showDate} context={context} />
+        <MatchRow key={m.id} match={withLiveScore(m, live)} showDate={showDate} context={context} />
       ))}
     </ul>
   );

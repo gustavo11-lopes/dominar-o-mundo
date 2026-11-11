@@ -12,6 +12,9 @@ import {
   parseQuery,
   SearchForm,
   type SearchParams,
+  Reveal,
+  SkeletonExit,
+  Morph,
 } from "@/components/ui";
 import { getPlayerList } from "@/server/queries/players";
 
@@ -43,8 +46,10 @@ async function Players({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p) => (
             <li key={p.slug}>
-              <Link href={`/jogadores/${p.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
-                <Logo src={p.imageUrl} name={p.handle} size={36} rounded />
+              <Link href={`/jogadores/${p.slug}`} className="flex items-center gap-3 spot panel-link px-4 py-3">
+                <Morph name={`player-${p.slug}`}>
+                  <Logo src={p.imageUrl} name={p.handle} size={36} rounded />
+                </Morph>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{p.handle}</span>
                   <span className="block truncate text-xs text-muted">
@@ -67,8 +72,16 @@ export default function JogadoresPage({ searchParams }: { searchParams: SearchPa
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle subtitle="Jogadores com time atual.">Jogadores</PageTitle>
-      <Suspense fallback={<ListSkeleton />}>
-        <Players searchParams={searchParams} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <Players searchParams={searchParams} />
+        </Reveal>
       </Suspense>
     </main>
   );

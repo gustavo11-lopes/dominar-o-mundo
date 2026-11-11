@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
-import { Country, Empty, ListSkeleton, Logo } from "@/components/ui";
+import { Country, Empty, ListSkeleton, Logo, Reveal, SkeletonExit, Morph } from "@/components/ui";
 import { HeroHeader, Stat } from "@/components/hero-header";
 import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 import { getTeam, type RosterEntry } from "@/server/queries/teams";
@@ -41,7 +41,11 @@ async function TeamContent({ params }: { params: Params }) {
     <>
       <HeroHeader
         backdrop={pickBackdrop(team.slug, backdrops)}
-        emblem={<Logo src={team.logoUrl} name={team.name} size={112} />}
+        emblem={
+          <Morph name={`team-${team.slug}`}>
+            <Logo src={team.logoUrl} name={team.name} size={112} />
+          </Morph>
+        }
         title={team.name}
         aside={
           played > 0 ? (
@@ -146,8 +150,16 @@ async function TeamContent({ params }: { params: Params }) {
 export default function TeamPage({ params }: { params: Params }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
-      <Suspense fallback={<ListSkeleton />}>
-        <TeamContent params={params} />
+      <Suspense
+        fallback={
+          <SkeletonExit>
+            <ListSkeleton />
+          </SkeletonExit>
+        }
+      >
+        <Reveal>
+          <TeamContent params={params} />
+        </Reveal>
       </Suspense>
     </main>
   );
