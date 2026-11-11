@@ -18,8 +18,9 @@ const layer = (depth: number): React.CSSProperties => ({
  * a maior palavra precisa caber na largura do lado (100cqi). Big Shoulders em caixa alta
  * ocupa cerca de 0,5em por letra. Teto de 4.5rem nas telas grandes.
  */
-function fitSize(name: string) {
-  const longest = Math.max(...name.split(/\s+/).map((w) => w.length), 4);
+function fitSize(...names: string[]) {
+  // Os dois lados usam o mesmo tamanho: o que faz caber a maior palavra entre os dois nomes.
+  const longest = Math.max(...names.flatMap((n) => n.split(/\s+/).map((w) => w.length)), 4);
   return `min(4.5rem, calc(100cqi / ${(longest * 0.52).toFixed(2)}))`;
 }
 
@@ -28,11 +29,13 @@ function Side({
   align,
   score,
   dim,
+  nameSize,
 }: {
   team: TeamView | null;
   align: "left" | "right";
   score: number | null;
   dim: boolean;
+  nameSize: string;
 }) {
   const right = align === "right";
   return (
@@ -62,13 +65,13 @@ function Side({
         {team ? (
           <Link
             href={`/times/${team.slug}`}
-            style={{ fontSize: fitSize(team.name) }}
+            style={{ fontSize: nameSize }}
             className={`display block uppercase hover:text-accent ${dim ? "text-muted" : ""}`}
           >
             {team.name}
           </Link>
         ) : (
-          <span style={{ fontSize: fitSize("A definir") }} className="display block uppercase text-muted">
+          <span style={{ fontSize: nameSize }} className="display block uppercase text-muted">
             A definir
           </span>
         )}
@@ -84,6 +87,7 @@ function Side({
 
 export function FaceOff({ match, live, backdrop }: { match: MatchView; live: boolean; backdrop: string | null }) {
   const showScore = live || match.status === "FINISHED";
+  const nameSize = fitSize(match.teamA?.name ?? "A definir", match.teamB?.name ?? "A definir");
   const when = match.scheduledAt
     ? `${formatDay(match.scheduledAt)}, ${formatTime(match.scheduledAt)}`
     : "Horário a definir";
@@ -122,14 +126,26 @@ export function FaceOff({ match, live, backdrop }: { match: MatchView; live: boo
 
         <Tilt>
           <div className="flex items-start gap-4 sm:items-center sm:gap-8">
-            <Side team={match.teamA} align="left" score={showScore ? match.scoreA : null} dim={match.winner === "B"} />
+            <Side
+              nameSize={nameSize}
+              team={match.teamA}
+              align="left"
+              score={showScore ? match.scoreA : null}
+              dim={match.winner === "B"}
+            />
             <div style={layer(60)} className="ignite flex shrink-0 flex-col items-center gap-2 self-center">
               <span className="neon display text-5xl text-accent italic sm:text-8xl" aria-label="contra">
                 VS
               </span>
               <span className="text-xs text-muted">MD{match.bestOf}</span>
             </div>
-            <Side team={match.teamB} align="right" score={showScore ? match.scoreB : null} dim={match.winner === "A"} />
+            <Side
+              nameSize={nameSize}
+              team={match.teamB}
+              align="right"
+              score={showScore ? match.scoreB : null}
+              dim={match.winner === "A"}
+            />
           </div>
         </Tilt>
 
