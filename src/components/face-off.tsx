@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDay, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
+import { StreamEmbed } from "./stream-embed";
 import { Tilt } from "./tilt";
 
 /** Camada que se desloca com o ponteiro (definido pelo Tilt) na proporção de `depth`. */
@@ -34,7 +35,7 @@ function Side({
             width={128}
             height={128}
             priority
-            className="size-20 object-contain drop-shadow-[0_12px_30px_rgba(0,0,0,0.7)] sm:size-32"
+            className="size-20 object-contain drop-shadow-[0_0_28px_rgba(255,255,255,0.18)] sm:size-36"
           />
         ) : (
           <span aria-hidden className="block size-20 bg-surface-2 chamfer sm:size-32" />
@@ -61,7 +62,7 @@ function Side({
   );
 }
 
-export function FaceOff({ match, live }: { match: MatchView; live: boolean }) {
+export function FaceOff({ match, live, backdrop }: { match: MatchView; live: boolean; backdrop: string | null }) {
   const showScore = live || match.status === "FINISHED";
   const when = match.scheduledAt
     ? `${formatDay(match.scheduledAt)}, ${formatTime(match.scheduledAt)}`
@@ -69,22 +70,31 @@ export function FaceOff({ match, live }: { match: MatchView; live: boolean }) {
 
   return (
     <section aria-labelledby="destaque" className="relative overflow-hidden border-b border-line">
+      {backdrop ? (
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
+          <Image src={backdrop} alt="" fill priority sizes="100vw" className="backdrop-drift object-cover opacity-45" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,12,16,0.35)_0%,rgba(11,12,16,0.7)_55%,var(--bg)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,12,16,0.75),transparent_35%,transparent_65%,rgba(11,12,16,0.75))]" />
+        </div>
+      ) : null}
       <div aria-hidden className="arena-floor" />
+      <div aria-hidden className="spotlight spotlight-left" />
+      <div aria-hidden className="spotlight spotlight-right" />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-2/3 bg-[radial-gradient(60%_80%_at_50%_0%,color-mix(in_oklab,var(--accent)_22%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-2/3 bg-[radial-gradient(60%_80%_at_50%_0%,color-mix(in_oklab,var(--accent)_30%,transparent),transparent)]"
       />
       <div className="relative mx-auto max-w-6xl px-4 pt-10 pb-14 sm:pt-14 sm:pb-20">
         <div className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
           {live ? (
             <span className="inline-flex items-center gap-2 bg-live px-2.5 py-1 font-semibold text-white chamfer-sm">
-              <span aria-hidden className="size-2 animate-pulse rounded-full bg-white" />
+              <span aria-hidden className="live-dot size-2 rounded-full bg-white text-white" />
               Ao vivo agora
             </span>
           ) : (
-            <span className="bg-surface-2 px-2.5 py-1 font-medium chamfer-sm">Próximo destaque</span>
+            <span className="bg-text px-2.5 py-1 font-semibold text-bg chamfer-sm">Próximo destaque</span>
           )}
-          <Link href={`/campeonatos/${match.tournamentSlug}`} id="destaque" className="text-muted hover:text-text">
+          <Link href={`/campeonatos/${match.tournamentSlug}`} id="destaque" className="text-text/85 hover:text-text">
             {match.tournament}, {match.stage}
           </Link>
         </div>
@@ -93,7 +103,7 @@ export function FaceOff({ match, live }: { match: MatchView; live: boolean }) {
           <div className="flex items-start gap-4 sm:items-center sm:gap-8">
             <Side team={match.teamA} align="left" score={showScore ? match.scoreA : null} dim={match.winner === "B"} />
             <div style={layer(60)} className="ignite flex shrink-0 flex-col items-center gap-2 self-center">
-              <span className="display text-5xl text-accent italic sm:text-7xl" aria-label="contra">
+              <span className="neon display text-5xl text-accent italic sm:text-8xl" aria-label="contra">
                 VS
               </span>
               <span className="text-xs text-muted">MD{match.bestOf}</span>
@@ -103,21 +113,29 @@ export function FaceOff({ match, live }: { match: MatchView; live: boolean }) {
         </Tilt>
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-muted">
+          <p className="text-text/85">
             {live
               ? "A série está em andamento."
               : `Começa ${when.charAt(0).toLowerCase()}${when.slice(1)}, horário de Brasília.`}
           </p>
-          {match.streamUrl && match.status !== "FINISHED" ? (
-            <a
-              href={match.streamUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-accent px-5 py-2.5 font-semibold text-white chamfer-sm hover:brightness-110"
-            >
-              Assistir transmissão
-            </a>
-          ) : null}
+          <div className="flex flex-wrap items-center gap-3">
+            {live && match.streamEmbedUrl ? (
+              <StreamEmbed
+                embedUrl={match.streamEmbedUrl}
+                title={`Transmissão: ${match.teamA?.name ?? "A definir"} contra ${match.teamB?.name ?? "A definir"}`}
+              />
+            ) : null}
+            {match.streamUrl && match.status !== "FINISHED" ? (
+              <a
+                href={match.streamUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-accent px-5 py-2.5 font-semibold text-white chamfer-sm hover:brightness-110"
+              >
+                {live ? "Abrir na plataforma" : "Assistir transmissão"}
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </section>

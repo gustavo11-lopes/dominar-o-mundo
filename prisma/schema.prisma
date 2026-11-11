@@ -49,6 +49,7 @@ enum SyncResource {
   MATCHES
   TEAMS
   STANDINGS
+  MAPS
 }
 
 /// Região como o provedor classifica cada fase (ex.: "SA", "WEU", "ASIA"). Criada pelo sync.
@@ -230,28 +231,30 @@ model StageStanding {
 
 /// Série (MD1, MD3, MD5) entre dois times. scoreA/scoreB contam mapas vencidos.
 model Match {
-  id           String      @id @default(uuid(7)) @db.Uuid
-  source       DataSource
-  externalId   String      @map("external_id")
-  stageId      String      @map("stage_id") @db.Uuid
-  name         String
-  status       MatchStatus @default(SCHEDULED)
+  id             String      @id @default(uuid(7)) @db.Uuid
+  source         DataSource
+  externalId     String      @map("external_id")
+  stageId        String      @map("stage_id") @db.Uuid
+  name           String
+  status         MatchStatus @default(SCHEDULED)
   /// Nulo quando a data ainda não foi anunciada.
-  scheduledAt  DateTime?   @map("scheduled_at") @db.Timestamptz(3)
-  beginAt      DateTime?   @map("begin_at") @db.Timestamptz(3)
-  endAt        DateTime?   @map("end_at") @db.Timestamptz(3)
-  bestOf       Int         @map("best_of") @db.SmallInt
+  scheduledAt    DateTime?   @map("scheduled_at") @db.Timestamptz(3)
+  beginAt        DateTime?   @map("begin_at") @db.Timestamptz(3)
+  endAt          DateTime?   @map("end_at") @db.Timestamptz(3)
+  bestOf         Int         @map("best_of") @db.SmallInt
   /// Times nulos em confrontos de chave ainda indefinidos.
-  teamAId      String?     @map("team_a_id") @db.Uuid
-  teamBId      String?     @map("team_b_id") @db.Uuid
-  scoreA       Int         @default(0) @map("score_a") @db.SmallInt
-  scoreB       Int         @default(0) @map("score_b") @db.SmallInt
+  teamAId        String?     @map("team_a_id") @db.Uuid
+  teamBId        String?     @map("team_b_id") @db.Uuid
+  scoreA         Int         @default(0) @map("score_a") @db.SmallInt
+  scoreB         Int         @default(0) @map("score_b") @db.SmallInt
   /// Nulo até a série terminar.
-  winnerTeamId String?     @map("winner_team_id") @db.Uuid
-  forfeit      Boolean     @default(false)
-  streamUrl    String?     @map("stream_url")
-  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt    DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  winnerTeamId   String?     @map("winner_team_id") @db.Uuid
+  forfeit        Boolean     @default(false)
+  streamUrl      String?     @map("stream_url")
+  /// URL de player incorporável (Twitch/YouTube) da transmissão principal, quando o provedor tem.
+  streamEmbedUrl String?     @map("stream_embed_url")
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   stage  Stage      @relation(fields: [stageId], references: [id], onDelete: Restrict)
   teamA  Team?      @relation("MatchTeamA", fields: [teamAId], references: [id], onDelete: Restrict)
@@ -289,6 +292,20 @@ model MatchMap {
   @@unique([matchId, position])
   @@index([winnerTeamId])
   @@map("match_map")
+}
+
+/// Mapa do jogo, com a arte da tela de carregamento. Usado como cenário visual, não como "mapa jogado".
+model GameMap {
+  id         String     @id @default(uuid(7)) @db.Uuid
+  source     DataSource
+  externalId String     @map("external_id")
+  slug       String     @unique
+  name       String
+  imageUrl   String?    @map("image_url")
+  updatedAt  DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([source, externalId])
+  @@map("game_map")
 }
 
 /// Estado da sincronização por recurso. Alimenta o "atualizado há X min" e evita execuções sobrepostas.

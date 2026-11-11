@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
 import { ListSkeleton, Logo } from "@/components/ui";
 import { formatRange } from "@/lib/format";
+import { HeroHeader } from "@/components/hero-header";
+import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 import { getTournament, type StageDetail } from "@/server/queries/tournaments";
 
 type Params = Promise<{ slug: string }>;
@@ -51,7 +53,7 @@ function Standings({ stage }: { stage: StageDetail }) {
               <td className="px-4 py-2 display text-lg tabular-nums">{s.rank}</td>
               <td className="px-2 py-2">
                 <Link href={`/times/${s.team.slug}`} className="flex items-center gap-2 hover:text-accent">
-                  <Logo src={s.team.logoUrl} size={20} />
+                  <Logo src={s.team.logoUrl} name={s.team.name} size={20} />
                   <span className="truncate">{s.team.name}</span>
                 </Link>
               </td>
@@ -73,21 +75,21 @@ function Standings({ stage }: { stage: StageDetail }) {
 }
 
 async function TournamentContent({ params }: { params: Params }) {
-  const t = await getTournament((await params).slug);
+  const [t, backdrops] = await Promise.all([getTournament((await params).slug), getBackdrops()]);
   if (!t) notFound();
 
   return (
     <>
-      <header className="mb-8 flex items-center gap-4">
-        <Logo src={t.leagueImageUrl} size={64} />
-        <div className="min-w-0">
-          <h1 className="page-title">{t.name}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {t.league} · {formatRange(t.beginAt, t.endAt)}
-          </p>
-          {t.prizePools.length ? <p className="mt-1 text-sm">Premiação divulgada: {t.prizePools.join(" + ")}</p> : null}
-        </div>
-      </header>
+      <HeroHeader
+        backdrop={pickBackdrop(t.slug, backdrops)}
+        emblem={<Logo src={t.leagueImageUrl} name={t.league} size={96} />}
+        title={t.name}
+      >
+        <p>
+          {t.league} · {formatRange(t.beginAt, t.endAt)}
+        </p>
+        {t.prizePools.length ? <p className="mt-1">Premiação divulgada: {t.prizePools.join(" + ")}</p> : null}
+      </HeroHeader>
 
       {t.stages.length > 1 ? (
         <nav aria-label="Fases" className="mb-8 flex flex-wrap gap-1">
@@ -123,7 +125,7 @@ async function TournamentContent({ params }: { params: Params }) {
                   href={`/times/${s.winner.slug}`}
                   className="flex items-center gap-1.5 font-medium hover:text-accent"
                 >
-                  <Logo src={s.winner.logoUrl} size={20} />
+                  <Logo src={s.winner.logoUrl} name={s.winner.name} size={20} />
                   {s.winner.name}
                 </Link>
               </p>

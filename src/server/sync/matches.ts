@@ -145,6 +145,7 @@ async function saveMatch(db: PrismaClient, input: MatchInput, cache: IdCache) {
     winnerTeamId: participant(match.winnerExternalId),
     forfeit: match.forfeit,
     streamUrl: match.streamUrl,
+    streamEmbedUrl: match.streamEmbedUrl,
   };
 
   await db.$transaction(async (tx) => {

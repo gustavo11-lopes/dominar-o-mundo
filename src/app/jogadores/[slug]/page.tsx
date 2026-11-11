@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
 import { Country, Empty, ListSkeleton, Logo } from "@/components/ui";
 import { formatDate } from "@/lib/format";
+import { HeroHeader } from "@/components/hero-header";
+import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 import { getPlayer } from "@/server/queries/players";
 
 type Params = Promise<{ slug: string }>;
@@ -21,29 +23,29 @@ function period(startedAt: string, startObserved: boolean, endedAt: string | nul
 }
 
 async function PlayerContent({ params }: { params: Params }) {
-  const p = await getPlayer((await params).slug);
+  const [p, backdrops] = await Promise.all([getPlayer((await params).slug), getBackdrops()]);
   if (!p) notFound();
 
   return (
     <>
-      <header className="mb-8 flex items-center gap-4">
-        <Logo src={p.imageUrl} size={88} rounded />
-        <div className="min-w-0">
-          <h1 className="page-title">{p.handle}</h1>
-          <p className="mt-1 text-sm text-muted">{p.fullName ?? "Nome não informado"}</p>
-          <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            <Country code={p.countryCode} />
-            {p.team ? (
-              <Link href={`/times/${p.team.slug}`} className="inline-flex items-center gap-1.5 hover:text-accent">
-                <Logo src={p.team.logoUrl} size={18} />
-                {p.team.name}
-              </Link>
-            ) : (
-              <span className="text-muted">Sem time</span>
-            )}
-          </p>
-        </div>
-      </header>
+      <HeroHeader
+        backdrop={pickBackdrop(p.team?.slug ?? p.slug, backdrops)}
+        emblem={<Logo src={p.imageUrl} name={p.handle} size={112} rounded />}
+        title={p.handle}
+      >
+        <p>{p.fullName ?? "Nome não informado"}</p>
+        <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          <Country code={p.countryCode} />
+          {p.team ? (
+            <Link href={`/times/${p.team.slug}`} className="inline-flex items-center gap-1.5 hover:text-accent">
+              <Logo src={p.team.logoUrl} name={p.team.name} size={18} />
+              {p.team.name}
+            </Link>
+          ) : (
+            <span className="text-muted">Sem time</span>
+          )}
+        </p>
+      </HeroHeader>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <section aria-labelledby="partidas" className="min-w-0">
@@ -69,7 +71,7 @@ async function PlayerContent({ params }: { params: Params }) {
               {p.history.map((h) => (
                 <li key={`${h.team.slug}-${h.startedAt}`}>
                   <Link href={`/times/${h.team.slug}`} className="flex items-center gap-3 px-4 py-3 hover:bg-surface-2">
-                    <Logo src={h.team.logoUrl} />
+                    <Logo src={h.team.logoUrl} name={h.team.name} />
                     <span className="min-w-0">
                       <span className="block truncate">{h.team.name}</span>
                       <span className="block text-xs text-muted">

@@ -68,7 +68,14 @@ export const psMatchSchema = z.object({
   opponents: z.array(z.object({ type: z.string(), opponent: psTeamSchema })),
   results: z.array(z.object({ team_id: id, score: z.number().int() })),
   games: z.array(psGameSchema),
-  streams_list: z.array(z.object({ main: z.boolean(), official: z.boolean(), raw_url: z.url().nullable() })),
+  streams_list: z.array(
+    z.object({
+      main: z.boolean(),
+      official: z.boolean(),
+      raw_url: z.url().nullable(),
+      embed_url: z.url().nullable().optional(),
+    }),
+  ),
   league: psLeagueSchema,
   serie: psSerieSchema,
   tournament: psTournamentSchema,
@@ -96,6 +103,13 @@ export const psStandingSchema = z.object({
   losses: z.number().int().nonnegative().optional(),
   game_wins: z.number().int().nonnegative().optional(),
   game_losses: z.number().int().nonnegative().optional(),
+});
+
+export const psGameMapSchema = z.object({
+  id,
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  image_url: z.url().nullable(),
 });
 
 export type PsPlayer = z.infer<typeof psPlayerSchema>;

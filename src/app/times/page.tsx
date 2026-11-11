@@ -49,7 +49,7 @@ async function Teams({ searchParams }: { searchParams: SearchParams }) {
           {items.map((t) => (
             <li key={t.slug}>
               <Link href={`/times/${t.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
-                <Logo src={t.logoUrl} size={36} />
+                <Logo src={t.logoUrl} name={t.name} size={36} />
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{t.name}</span>
                   <span className="block truncate text-xs text-muted">

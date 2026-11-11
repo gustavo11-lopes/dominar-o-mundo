@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
 import { Country, Empty, ListSkeleton, Logo } from "@/components/ui";
-import { formatDate } from "@/lib/format";
+import { HeroHeader, Stat } from "@/components/hero-header";
+import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 import { getTeam, type RosterEntry } from "@/server/queries/teams";
 
 type Params = Promise<{ slug: string }>;
@@ -18,7 +19,7 @@ function PlayerItem({ p }: { p: RosterEntry }) {
   return (
     <li>
       <Link href={`/jogadores/${p.slug}`} className="flex items-center gap-3 px-4 py-3 hover:bg-surface-2">
-        <Logo src={p.imageUrl} size={36} rounded />
+        <Logo src={p.imageUrl} name={p.handle} size={36} rounded />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium">{p.handle}</span>
           <span className="block truncate text-xs text-muted">{p.fullName ?? "Nome não informado"}</span>
@@ -32,22 +33,34 @@ function PlayerItem({ p }: { p: RosterEntry }) {
 }
 
 async function TeamContent({ params }: { params: Params }) {
-  const team = await getTeam((await params).slug);
+  const [team, backdrops] = await Promise.all([getTeam((await params).slug), getBackdrops()]);
   if (!team) notFound();
   const played = team.record.wins + team.record.losses;
 
   return (
     <>
-      <header className="mb-8 flex items-center gap-4">
-        <Logo src={team.logoUrl} size={72} />
-        <div className="min-w-0">
-          <h1 className="page-title">{team.name}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {team.acronym ? `${team.acronym} · ` : ""}
-            <Country code={team.countryCode} />
-          </p>
-        </div>
-      </header>
+      <HeroHeader
+        backdrop={pickBackdrop(team.slug, backdrops)}
+        emblem={<Logo src={team.logoUrl} name={team.name} size={112} />}
+        title={team.name}
+        aside={
+          played > 0 ? (
+            <Stat
+              value={
+                <>
+                  {team.record.wins}
+                  <span className="text-muted">–</span>
+                  {team.record.losses}
+                </>
+              }
+              label="Vitórias e derrotas registradas"
+            />
+          ) : null
+        }
+      >
+        {team.acronym ? `${team.acronym} · ` : ""}
+        <Country code={team.countryCode} />
+      </HeroHeader>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-8">
@@ -88,20 +101,6 @@ async function TeamContent({ params }: { params: Params }) {
               <Empty>Elenco não informado pela fonte.</Empty>
             )}
           </section>
-
-          {played > 0 && team.record.since ? (
-            <section aria-labelledby="campanha" className="panel p-4">
-              <h2 id="campanha" className="mb-3 section-title">
-                Campanha registrada
-              </h2>
-              <p className="text-2xl font-semibold tabular-nums">
-                {team.record.wins}V <span className="text-muted">·</span> {team.record.losses}D
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Séries encerradas registradas pelo site desde {formatDate(team.record.since)}.
-              </p>
-            </section>
-          ) : null}
 
           {team.standings.length ? (
             <section aria-labelledby="colocacoes">

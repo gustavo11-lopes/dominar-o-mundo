@@ -49,6 +49,7 @@ export type MatchInput = {
     winnerExternalId: string | null;
     forfeit: boolean;
     streamUrl: string | null;
+    streamEmbedUrl: string | null;
   };
   maps: {
     externalId: string;
@@ -173,6 +174,7 @@ export function mapMatch(m: PsMatch): MatchInput {
       winnerExternalId: winner,
       forfeit: m.forfeit,
       streamUrl: stream?.raw_url ?? null,
+      streamEmbedUrl: stream?.embed_url ?? null,
     },
     maps: m.games.map((g) => {
       const mapStatus = MAP_STATUS[g.status];

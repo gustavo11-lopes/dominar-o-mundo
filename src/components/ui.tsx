@@ -96,7 +96,28 @@ export function Country({ code }: { code: string | null }) {
   );
 }
 
-export function Logo({ src, size = 28, rounded = false }: { src: string | null; size?: number; rounded?: boolean }) {
+/** Iniciais para quando a fonte não tem imagem: "KeepBest Gaming" vira "KG", "sibeastw0w" vira "SI". */
+function initials(name: string) {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const raw = words.length > 1 ? words[0][0] + words[1][0] : name.trim().slice(0, 2);
+  return raw.toUpperCase();
+}
+
+/**
+ * Logo de time/liga ou foto de jogador. Sem imagem, mostra as iniciais num emblema
+ * iluminado em vez de um quadrado vazio.
+ */
+export function Logo({
+  src,
+  name,
+  size = 28,
+  rounded = false,
+}: {
+  src: string | null;
+  name?: string;
+  size?: number;
+  rounded?: boolean;
+}) {
   const shape = rounded ? "rounded-full" : "rounded";
   if (src) {
     return (
@@ -110,7 +131,15 @@ export function Logo({ src, size = 28, rounded = false }: { src: string | null; 
       />
     );
   }
-  return <span aria-hidden style={{ width: size, height: size }} className={`shrink-0 bg-surface-2 ${shape}`} />;
+  return (
+    <span
+      aria-hidden
+      style={{ width: size, height: size, fontSize: Math.max(10, size * 0.4) }}
+      className={`display grid shrink-0 place-items-center border border-line bg-[radial-gradient(circle_at_30%_25%,var(--surface-2),var(--surface))] text-muted ${shape}`}
+    >
+      {name ? initials(name) : null}
+    </span>
+  );
 }
 
 export function ListSkeleton({ rows = 6 }: { rows?: number }) {

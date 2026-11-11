@@ -1,5 +1,6 @@
 import type { PrismaClient } from "@/generated/prisma/client";
 import { describeError, type SyncReport } from "./lease";
+import { pandaScoreMapFetcher, syncMaps } from "./maps";
 import { pandaScoreFetcher, syncMatches } from "./matches";
 import { pandaScoreStandingsFetcher, syncStandings } from "./standings";
 import { pandaScoreTeamFetcher, syncTeams } from "./teams";
@@ -15,6 +16,7 @@ export async function runAllSyncs(db: PrismaClient, token: string): Promise<Reco
     partidas: () => syncMatches(db, pandaScoreFetcher(token)),
     times: () => syncTeams(db, pandaScoreTeamFetcher(token)),
     classificacao: () => syncStandings(db, pandaScoreStandingsFetcher(token)),
+    mapas: () => syncMaps(db, pandaScoreMapFetcher(token)),
   };
   const out: Record<string, SyncOutcome> = {};
   for (const [name, step] of Object.entries(steps)) {

@@ -44,7 +44,7 @@ async function Players({ searchParams }: { searchParams: SearchParams }) {
           {items.map((p) => (
             <li key={p.slug}>
               <Link href={`/jogadores/${p.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
-                <Logo src={p.imageUrl} size={36} rounded />
+                <Logo src={p.imageUrl} name={p.handle} size={36} rounded />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{p.handle}</span>
                   <span className="block truncate text-xs text-muted">

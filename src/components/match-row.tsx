@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatDayMonth, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
+import { StreamEmbed } from "./stream-embed";
 import { Logo } from "./ui";
 
 /*
@@ -48,7 +49,7 @@ function Stacked({ match }: { match: MatchView }) {
     return (
       <div className="flex items-center gap-3">
         <TeamLink team={team} className="flex min-w-0 flex-1 items-center gap-2.5">
-          <Logo src={team?.logoUrl ?? null} size={24} />
+          <Logo src={team?.logoUrl ?? null} name={team?.name} size={24} />
           <TeamLabel team={team} won={match.winner === side} />
         </TeamLink>
         {hasScore(match) ? (
@@ -78,7 +79,7 @@ function SideBySide({ match }: { match: MatchView }) {
   return (
     <div className="hidden items-center gap-3 @xl:flex">
       <TeamLink team={match.teamA} className="flex min-w-0 flex-1 items-center gap-2">
-        <Logo src={match.teamA?.logoUrl ?? null} />
+        <Logo src={match.teamA?.logoUrl ?? null} name={match.teamA?.name} />
         <TeamLabel team={match.teamA} won={match.winner === "A"} />
       </TeamLink>
       <span className="w-24 shrink-0 text-center">
@@ -95,7 +96,7 @@ function SideBySide({ match }: { match: MatchView }) {
         )}
       </span>
       <TeamLink team={match.teamB} className="flex min-w-0 flex-1 flex-row-reverse items-center gap-2 text-right">
-        <Logo src={match.teamB?.logoUrl ?? null} />
+        <Logo src={match.teamB?.logoUrl ?? null} name={match.teamB?.name} />
         <TeamLabel team={match.teamB} won={match.winner === "B"} />
       </TeamLink>
     </div>
@@ -106,7 +107,7 @@ function StatusBadge({ match }: { match: MatchView }) {
   if (match.status === "LIVE") {
     return (
       <span className="inline-flex items-center gap-1.5 bg-live px-1.5 py-0.5 text-xs font-semibold text-white">
-        <span aria-hidden className="size-1.5 animate-pulse rounded-full bg-white" />
+        <span aria-hidden className="live-dot size-1.5 rounded-full bg-white text-white" />
         Ao vivo
       </span>
     );
@@ -146,15 +147,26 @@ export function MatchRow({
       </div>
       <Stacked match={match} />
       <SideBySide match={match} />
-      {match.streamUrl && (live || match.status === "SCHEDULED") ? (
-        <a
-          href={match.streamUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2.5 inline-block text-xs text-accent hover:underline"
-        >
-          Assistir transmissão ↗
-        </a>
+      {live || match.status === "SCHEDULED" ? (
+        <div className="mt-2.5 flex flex-wrap items-center gap-4">
+          {live && match.streamEmbedUrl ? (
+            <StreamEmbed
+              compact
+              embedUrl={match.streamEmbedUrl}
+              title={`Transmissão: ${match.teamA?.name ?? "A definir"} contra ${match.teamB?.name ?? "A definir"}`}
+            />
+          ) : null}
+          {match.streamUrl ? (
+            <a
+              href={match.streamUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-accent hover:underline"
+            >
+              {live ? "Abrir na plataforma ↗" : "Assistir transmissão ↗"}
+            </a>
+          ) : null}
+        </div>
       ) : null}
     </li>
   );

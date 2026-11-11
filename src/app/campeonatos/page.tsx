@@ -56,7 +56,7 @@ async function Tournaments({ searchParams }: { searchParams: SearchParams }) {
           {items.map((t) => (
             <li key={t.slug}>
               <Link href={`/campeonatos/${t.slug}`} className="flex h-full gap-3 panel-link p-4">
-                <Logo src={t.leagueImageUrl} size={40} />
+                <Logo src={t.leagueImageUrl} name={t.league} size={40} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{t.name}</span>
                   <span className="block truncate text-xs text-muted">{t.league}</span>

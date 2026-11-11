@@ -5,6 +5,7 @@ import { MatchList } from "@/components/match-row";
 import { Empty, ListSkeleton, Logo } from "@/components/ui";
 import { formatRange } from "@/lib/format";
 import { getHomeData } from "@/server/queries/home";
+import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 
 function SectionHead({ id, title, href, linkLabel }: { id: string; title: string; href?: string; linkLabel?: string }) {
   return (
@@ -22,12 +23,12 @@ function SectionHead({ id, title, href, linkLabel }: { id: string; title: string
 }
 
 async function Home() {
-  const data = await getHomeData();
+  const [data, backdrops] = await Promise.all([getHomeData(), getBackdrops()]);
 
   return (
     <>
       {data.featured ? (
-        <FaceOff match={data.featured} live={data.featured.live} />
+        <FaceOff match={data.featured} live={data.featured.live} backdrop={pickBackdrop(data.featured.id, backdrops)} />
       ) : (
         <section className="mx-auto max-w-6xl px-4 py-16">
           <h1 className="display text-6xl uppercase">VALORANT competitivo</h1>
@@ -38,14 +39,14 @@ async function Home() {
 
       <div className="mx-auto max-w-6xl space-y-14 px-4 py-12">
         {data.live.length ? (
-          <section aria-labelledby="ao-vivo">
+          <section aria-labelledby="ao-vivo" className="reveal">
             <SectionHead id="ao-vivo" title="Também ao vivo" />
             <MatchList matches={data.live} />
           </section>
         ) : null}
 
         <div className="grid gap-10 lg:grid-cols-2 [&>*]:min-w-0">
-          <section aria-labelledby="proximas">
+          <section aria-labelledby="proximas" className="reveal">
             <SectionHead id="proximas" title="Próximas" href="/partidas" linkLabel="Agenda completa" />
             {data.upcoming.length ? (
               <MatchList matches={data.upcoming} showDate />
@@ -53,7 +54,7 @@ async function Home() {
               <Empty>Nenhuma partida marcada.</Empty>
             )}
           </section>
-          <section aria-labelledby="resultados">
+          <section aria-labelledby="resultados" className="reveal">
             <SectionHead
               id="resultados"
               title="Resultados"
@@ -69,13 +70,13 @@ async function Home() {
         </div>
 
         {data.tournaments.length ? (
-          <section aria-labelledby="campeonatos">
+          <section aria-labelledby="campeonatos" className="reveal">
             <SectionHead id="campeonatos" title="Em andamento" href="/campeonatos" linkLabel="Todos os campeonatos" />
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {data.tournaments.map((t) => (
                 <li key={t.slug}>
                   <Link href={`/campeonatos/${t.slug}`} className="flex h-full flex-col gap-3 panel-link p-4 chamfer">
-                    <Logo src={t.leagueImageUrl} size={36} />
+                    <Logo src={t.leagueImageUrl} name={t.league} size={36} />
                     <span className="display text-2xl uppercase">{t.name}</span>
                     <span className="mt-auto text-xs text-muted">
                       {formatRange(t.beginAt, t.endAt)}
@@ -89,14 +90,14 @@ async function Home() {
         ) : null}
 
         {data.activeTeams.length ? (
-          <section aria-labelledby="times">
+          <section aria-labelledby="times" className="reveal">
             <SectionHead id="times" title="Mais ativos no mês" href="/times" linkLabel="Todos os times" />
             <p className="-mt-1 mb-4 text-sm text-muted">Times com mais séries disputadas nos últimos 30 dias.</p>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {data.activeTeams.map((t) => (
                 <li key={t.slug}>
                   <Link href={`/times/${t.slug}`} className="flex h-full items-center gap-3 panel-link p-3">
-                    <Logo src={t.logoUrl} size={36} />
+                    <Logo src={t.logoUrl} name={t.name} size={36} />
                     <span className="min-w-0">
                       <span className="block truncate font-medium">{t.name}</span>
                       <span className="block text-xs text-muted tabular-nums">

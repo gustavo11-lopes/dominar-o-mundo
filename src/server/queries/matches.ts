@@ -19,6 +19,7 @@ export type MatchView = {
   bestOf: number;
   forfeit: boolean;
   streamUrl: string | null;
+  streamEmbedUrl: string | null;
   teamA: TeamView | null;
   teamB: TeamView | null;
   scoreA: number;
@@ -55,6 +56,7 @@ export const matchSelect = {
   bestOf: true,
   forfeit: true,
   streamUrl: true,
+  streamEmbedUrl: true,
   scoreA: true,
   scoreB: true,
   teamAId: true,
@@ -75,6 +77,7 @@ export function toMatchView(row: Row): MatchView {
     bestOf: row.bestOf,
     forfeit: row.forfeit,
     streamUrl: row.streamUrl,
+    streamEmbedUrl: row.streamEmbedUrl,
     teamA: row.teamA && toTeamView(row.teamA),
     teamB: row.teamB && toTeamView(row.teamB),
     scoreA: row.scoreA,
