@@ -98,7 +98,7 @@ export function Country({ code }: { code: string | null }) {
 }
 
 /** Iniciais para quando a fonte não tem imagem: "KeepBest Gaming" vira "KG", "sibeastw0w" vira "SI". */
-function initials(name: string) {
+export function initials(name: string) {
   const words = name.trim().split(/\s+/).filter(Boolean);
   const raw = words.length > 1 ? words[0][0] + words[1][0] : name.trim().slice(0, 2);
   return raw.toUpperCase();

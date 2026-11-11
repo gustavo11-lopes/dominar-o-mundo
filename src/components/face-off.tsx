@@ -5,12 +5,23 @@ import type { MatchView, TeamView } from "@/server/queries/matches";
 import { AutoRefresh, Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Tilt } from "./tilt";
+import { initials } from "./ui";
 
 /** Camada que se desloca com o ponteiro (definido pelo Tilt) na proporção de `depth`. */
 const layer = (depth: number): React.CSSProperties => ({
   transform: `translate3d(calc(var(--px, 0) * ${depth}px), calc(var(--py, 0) * ${depth}px), ${depth}px)`,
   transition: "transform 300ms ease-out",
 });
+
+/**
+ * Tamanho do nome do time que cabe na coluna sem quebrar palavra no meio:
+ * a maior palavra precisa caber na largura do lado (100cqi). Big Shoulders em caixa alta
+ * ocupa cerca de 0,5em por letra. Teto de 4.5rem nas telas grandes.
+ */
+function fitSize(name: string) {
+  const longest = Math.max(...name.split(/\s+/).map((w) => w.length), 4);
+  return `min(4.5rem, calc(100cqi / ${(longest * 0.52).toFixed(2)}))`;
+}
 
 function Side({
   team,
@@ -26,7 +37,7 @@ function Side({
   const right = align === "right";
   return (
     <div
-      className={`flex min-w-0 flex-1 flex-col gap-4 ${right ? "items-end text-right enter-right" : "items-start enter-left"}`}
+      className={`@container flex min-w-0 flex-1 flex-col gap-4 ${right ? "items-end text-right enter-right" : "items-start enter-left"}`}
     >
       <div style={layer(40)}>
         {team?.logoUrl ? (
@@ -39,19 +50,27 @@ function Side({
             className="size-20 object-contain drop-shadow-[0_0_28px_rgba(255,255,255,0.18)] sm:size-36"
           />
         ) : (
-          <span aria-hidden className="block size-20 bg-surface-2 chamfer sm:size-32" />
+          <span
+            aria-hidden
+            className="display grid size-20 place-items-center border border-line bg-[radial-gradient(circle_at_30%_25%,var(--surface-2),var(--surface))] text-3xl text-muted chamfer sm:size-36 sm:text-6xl"
+          >
+            {team ? initials(team.name) : "?"}
+          </span>
         )}
       </div>
       <div style={layer(20)} className="min-w-0 max-w-full">
         {team ? (
           <Link
             href={`/times/${team.slug}`}
-            className={`display block text-3xl break-words uppercase hover:text-accent sm:text-6xl lg:text-7xl ${dim ? "text-muted" : ""}`}
+            style={{ fontSize: fitSize(team.name) }}
+            className={`display block uppercase hover:text-accent ${dim ? "text-muted" : ""}`}
           >
             {team.name}
           </Link>
         ) : (
-          <span className="display text-3xl uppercase text-muted sm:text-6xl">A definir</span>
+          <span style={{ fontSize: fitSize("A definir") }} className="display block uppercase text-muted">
+            A definir
+          </span>
         )}
       </div>
       {score !== null ? (
