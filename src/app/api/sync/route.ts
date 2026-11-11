@@ -4,7 +4,8 @@ import { db } from "@/lib/db";
 import { DATA_TAG } from "@/server/queries/tags";
 import { runAllSyncs } from "@/server/sync/run";
 
-export const maxDuration = 60;
+// A primeira carga (catálogo inteiro de times) passa de 1 minuto.
+export const maxDuration = 300;
 
 function authorized(header: string | null): boolean {
   const secret = process.env.CRON_SECRET;
