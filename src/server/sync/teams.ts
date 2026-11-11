@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@/generated/prisma/client";
 import { fetchAllPages } from "@/server/pandascore/client";
-import { mapPlayer, mapTeam, UnsupportedRecordError, type PlayerInput } from "@/server/pandascore/map";
+import { mapPlayer, mapTeam, type PlayerInput } from "@/server/pandascore/map";
 import { psTeamWithPlayersSchema } from "@/server/pandascore/schemas";
 import { uuidv7 } from "@/lib/uuid";
 import type { PsTeamWithPlayers } from "@/server/pandascore/schemas";
