@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDay, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
-import { Score } from "./live-client";
+import { AutoRefresh, Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Tilt } from "./tilt";
 
@@ -71,6 +71,7 @@ export function FaceOff({ match, live, backdrop }: { match: MatchView; live: boo
 
   return (
     <section aria-labelledby="destaque" className="relative overflow-hidden border-b border-line">
+      {live ? <AutoRefresh seconds={30} /> : null}
       {backdrop ? (
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           <Image src={backdrop} alt="" fill priority sizes="100vw" className="backdrop-drift object-cover opacity-45" />

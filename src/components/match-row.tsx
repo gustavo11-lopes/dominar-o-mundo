@@ -2,7 +2,7 @@ import Link from "next/link";
 import { formatDayMonth, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
 import { getLiveScores, withLiveScore } from "@/server/queries/live";
-import { Score } from "./live-client";
+import { AutoRefresh, Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Logo } from "./ui";
 
@@ -184,11 +184,13 @@ export async function MatchList({
   context?: "full" | "stage";
 }) {
   const live = matches.some((m) => m.status === "LIVE" || m.status === "SCHEDULED") ? await getLiveScores() : [];
+  const rows = matches.map((m) => withLiveScore(m, live));
   return (
     <ul className="@container panel">
-      {matches.map((m) => (
-        <MatchRow key={m.id} match={withLiveScore(m, live)} showDate={showDate} context={context} />
+      {rows.map((m) => (
+        <MatchRow key={m.id} match={m} showDate={showDate} context={context} />
       ))}
+      {rows.some((m) => m.status === "LIVE") ? <AutoRefresh seconds={30} /> : null}
     </ul>
   );
 }
