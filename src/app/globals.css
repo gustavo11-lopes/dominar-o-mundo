@@ -301,6 +301,21 @@ body {
   animation: score-flash 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Faixa de partidas ao vivo no topo: rola como letreiro e para com o mouse em cima. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Luz que segue o cursor sobre os blocos (posição definida pelo SpotlightCursor). */
 .spot {
   position: relative;
@@ -367,5 +382,10 @@ body {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+  .marquee {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
   }
 }

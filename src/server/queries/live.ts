@@ -15,6 +15,7 @@ import type { MatchView } from "./matches";
 const runningSchema = z.object({
   id: z.number(),
   name: z.string(),
+  tournament: z.object({ tier: z.string().nullable() }).nullable().optional(),
   opponents: z.array(
     z.object({
       opponent: z.object({
@@ -33,6 +34,8 @@ export type LiveScore = {
   /** Placar por slug do time (o slug do banco é o mesmo do provedor). */
   scores: Record<string, number>;
   teams: { slug: string | null; name: string; acronym: string | null; score: number }[];
+  /** Tier do campeonato (s, a, b, c, d), em minúsculas como vem do provedor. */
+  tier: string | null;
 };
 
 /** Sempre na hora do acesso (nunca na pré-renderização), com cache curto entre visitas. */
@@ -63,6 +66,7 @@ async function fetchLiveScores(): Promise<LiveScore[]> {
           externalId: String(m.data.id),
           scores: Object.fromEntries(teams.flatMap((t) => (t.slug ? [[t.slug, t.score]] : []))),
           teams,
+          tier: m.data.tournament?.tier?.toLowerCase() ?? null,
         },
       ];
     });
