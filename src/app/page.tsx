@@ -37,7 +37,7 @@ async function Home() {
           <p className="mt-3 text-muted">Nenhuma partida marcada para os próximos dias.</p>
         </section>
       )}
-      <h1 className="sr-only">esports-hub: VALORANT competitivo</h1>
+      <h1 className="sr-only">VALOHUB: VALORANT competitivo</h1>
 
       <div className="mx-auto max-w-6xl space-y-14 px-4 py-12">
         {data.live.length ? (

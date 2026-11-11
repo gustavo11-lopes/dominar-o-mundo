@@ -1,25 +1,19 @@
 import type { Metadata } from "next";
 import { Big_Shoulders, IBM_Plex_Sans } from "next/font/google";
-import Link from "next/link";
 import { Suspense } from "react";
 import { LiveTicker } from "@/components/live-ticker";
 import { SpotlightCursor } from "@/components/spotlight-cursor";
+import { Brand } from "@/components/brand";
+import { NavLinks, NavLinksFallback } from "@/components/nav-links";
 import "./globals.css";
 
 const shoulders = Big_Shoulders({ variable: "--font-shoulders", subsets: ["latin"], weight: "variable" });
 const plex = IBM_Plex_Sans({ variable: "--font-plex", subsets: ["latin"], weight: ["400", "500", "600"] });
 
 export const metadata: Metadata = {
-  title: { default: "esports-hub · VALORANT competitivo", template: "%s · esports-hub" },
+  title: { default: "VALOHUB · VALORANT competitivo", template: "%s · VALOHUB" },
   description: "Partidas ao vivo, resultados, campeonatos, times e jogadores de VALORANT.",
 };
-
-const NAV = [
-  ["/partidas", "Partidas"],
-  ["/campeonatos", "Campeonatos"],
-  ["/times", "Times"],
-  ["/jogadores", "Jogadores"],
-] as const;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -37,18 +31,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Suspense>
           <nav
             aria-label="Principal"
-            className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-3"
+            className="flex w-full flex-wrap items-center gap-x-10 gap-y-2 px-4 py-2.5 sm:px-6 lg:px-8"
           >
-            <Link href="/" className="display text-2xl uppercase">
-              esports<span className="text-accent">hub</span>
-            </Link>
-            <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-              {NAV.map(([href, label]) => (
-                <Link key={href} href={href} className="text-muted transition-colors hover:text-text">
-                  {label}
-                </Link>
-              ))}
-            </div>
+            <Brand />
+            <Suspense fallback={<NavLinksFallback />}>
+              <NavLinks />
+            </Suspense>
           </nav>
         </header>
         <SpotlightCursor />

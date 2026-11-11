@@ -1,6 +1,6 @@
-# esports-hub
+# VALOHUB
 
-Plataforma de eSports com foco em VALORANT. Nome provisório.
+Plataforma de VALORANT competitivo: partidas, campeonatos, times e jogadores.
 
 ## Rodar localmente
 
