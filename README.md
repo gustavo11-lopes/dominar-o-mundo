@@ -20,7 +20,7 @@ Comandos:
 |---|---|
 | `npm run sync` | Sincroniza partidas, times/elencos e classificação. Depois da primeira carga, busca só o que mudou. |
 | `npm test` | Testes. Os de integração rodam só com `TEST_DATABASE_URL` definido. |
-| `npm run typecheck` / `npm run lint` | Tipos e lint. |
+| `npm run typecheck` / `npm run lint` / `npm run format` | Tipos, lint e formatação (Prettier). |
 
 ## Arquitetura
 
@@ -42,7 +42,13 @@ Não tem: nome do mapa, placar de rounds, estatísticas de jogador e de time, es
 
 ## Páginas
 
-`/partidas`, `/campeonatos` e `/campeonatos/[slug]`, `/times` e `/times/[slug]`, `/jogadores` e `/jogadores/[slug]`. A home redireciona para `/partidas` até a Fase 4.
+`/` (home), `/partidas`, `/campeonatos` e `/campeonatos/[slug]`, `/times` e `/times/[slug]`, `/jogadores` e `/jogadores/[slug]`.
+
+## Visual
+
+Tokens de cor e utilitários em `src/app/globals.css`: `panel`/`panel-link` (superfícies), `tag`, `chamfer`/`chamfer-sm` (cantos chanfrados, só em destaque), `page-title`/`section-title` (Big Shoulders) e `display`. Texto em IBM Plex Sans.
+A linha de partida usa container query: empilhada em listas estreitas, lado a lado a partir de `@xl`.
+Movimento: só a entrada do confronto na home e a inclinação 3D pelo mouse; ambos desligam com `prefers-reduced-motion`.
 
 ## Banco
 

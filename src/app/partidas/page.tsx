@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
-import { Empty, firstParam, ListSkeleton, PageTitle, Pagination, parsePage, Pill, type SearchParams } from "@/components/ui";
+import {
+  Empty,
+  firstParam,
+  ListSkeleton,
+  PageTitle,
+  Pagination,
+  parsePage,
+  Pill,
+  type SearchParams,
+} from "@/components/ui";
 import { formatDay, formatTime, groupByDay } from "@/lib/format";
 import { getLastSync, getMatchList, type MatchTab } from "@/server/queries/matches";
 
@@ -28,10 +37,7 @@ async function Matches({ searchParams }: { searchParams: SearchParams }) {
     major: firstParam(params.nivel) === "principais",
     page: parsePage(params.pagina),
   };
-  const [list, lastSync] = await Promise.all([
-    getMatchList(filters.tab, filters.major, filters.page),
-    getLastSync(),
-  ]);
+  const [list, lastSync] = await Promise.all([getMatchList(filters.tab, filters.major, filters.page), getLastSync()]);
   const groups = groupByDay(list.items);
 
   return (
@@ -95,7 +101,7 @@ async function Matches({ searchParams }: { searchParams: SearchParams }) {
 
 export default function PartidasPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle>Partidas</PageTitle>
       <Suspense fallback={<ListSkeleton rows={8} />}>
         <Matches searchParams={searchParams} />

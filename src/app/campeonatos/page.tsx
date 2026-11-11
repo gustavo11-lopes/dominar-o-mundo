@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Empty, firstParam, ListSkeleton, Logo, PageTitle, Pagination, parsePage, Pill, type SearchParams } from "@/components/ui";
+import {
+  Empty,
+  firstParam,
+  ListSkeleton,
+  Logo,
+  PageTitle,
+  Pagination,
+  parsePage,
+  Pill,
+  type SearchParams,
+} from "@/components/ui";
 import { formatRange } from "@/lib/format";
 import { getTournamentList, type TournamentTab } from "@/server/queries/tournaments";
 
@@ -45,19 +55,18 @@ async function Tournaments({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2">
           {items.map((t) => (
             <li key={t.slug}>
-              <Link
-                href={`/campeonatos/${t.slug}`}
-                className="flex h-full gap-3 rounded-lg border border-line bg-surface p-4 hover:border-muted"
-              >
+              <Link href={`/campeonatos/${t.slug}`} className="flex h-full gap-3 panel-link p-4">
                 <Logo src={t.leagueImageUrl} size={40} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{t.name}</span>
                   <span className="block truncate text-xs text-muted">{t.league}</span>
                   <span className="mt-2 block text-xs text-muted">{formatRange(t.beginAt, t.endAt)}</span>
                   <span className="mt-1 flex flex-wrap gap-1.5 text-xs">
-                    {t.tier !== "UNRANKED" ? <span className="rounded bg-surface-2 px-1.5 py-0.5">Tier {t.tier}</span> : null}
+                    {t.tier !== "UNRANKED" ? <span className="tag">Tier {t.tier}</span> : null}
                     {t.regions.map((r) => (
-                      <span key={r} className="rounded bg-surface-2 px-1.5 py-0.5">{r}</span>
+                      <span key={r} className="tag">
+                        {r}
+                      </span>
                     ))}
                   </span>
                 </span>
@@ -73,7 +82,7 @@ async function Tournaments({ searchParams }: { searchParams: SearchParams }) {
 
 export default function CampeonatosPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle subtitle="Campeonatos com partidas acompanhadas pelo site.">Campeonatos</PageTitle>
       <Suspense fallback={<ListSkeleton />}>
         <Tournaments searchParams={searchParams} />

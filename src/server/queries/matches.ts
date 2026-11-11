@@ -30,7 +30,23 @@ export type MatchView = {
   tier: string;
 };
 
-export const teamSelect = { slug: true, name: true, acronym: true, logoUrl: true } satisfies Prisma.TeamSelect;
+// O site é escuro: quando existe, o logo para fundo escuro substitui o padrão.
+const teamColumns = {
+  slug: true,
+  name: true,
+  acronym: true,
+  logoUrl: true,
+  logoDarkUrl: true,
+} satisfies Prisma.TeamSelect;
+export const teamSelect = teamColumns;
+
+type TeamRow = Prisma.TeamGetPayload<{ select: typeof teamColumns }>;
+export const toTeamView = (t: TeamRow): TeamView => ({
+  slug: t.slug,
+  name: t.name,
+  acronym: t.acronym,
+  logoUrl: t.logoDarkUrl ?? t.logoUrl,
+});
 
 export const matchSelect = {
   id: true,
@@ -59,12 +75,18 @@ export function toMatchView(row: Row): MatchView {
     bestOf: row.bestOf,
     forfeit: row.forfeit,
     streamUrl: row.streamUrl,
-    teamA: row.teamA,
-    teamB: row.teamB,
+    teamA: row.teamA && toTeamView(row.teamA),
+    teamB: row.teamB && toTeamView(row.teamB),
     scoreA: row.scoreA,
     scoreB: row.scoreB,
     winner:
-      row.winnerTeamId === null ? null : row.winnerTeamId === row.teamAId ? "A" : row.winnerTeamId === row.teamBId ? "B" : null,
+      row.winnerTeamId === null
+        ? null
+        : row.winnerTeamId === row.teamAId
+          ? "A"
+          : row.winnerTeamId === row.teamBId
+            ? "B"
+            : null,
     stage: row.stage.name,
     tournament: row.stage.tournament.name,
     tournamentSlug: row.stage.tournament.slug,

@@ -44,13 +44,7 @@ async function upsertPlayer(db: PrismaClient, p: PlayerInput): Promise<string> {
  * Ajusta as passagens para refletir o elenco atual do time:
  * quem saiu tem a passagem encerrada; quem chegou (ou mudou de time) ganha passagem nova.
  */
-async function reconcileRoster(
-  db: PrismaClient,
-  teamId: string,
-  playerIds: string[],
-  now: Date,
-  observed: boolean,
-) {
+async function reconcileRoster(db: PrismaClient, teamId: string, playerIds: string[], now: Date, observed: boolean) {
   await db.$transaction(async (tx) => {
     await tx.playerTeamStint.updateMany({
       where: { teamId, endedAt: null, playerId: { notIn: playerIds } },

@@ -18,7 +18,7 @@ export const parseQuery = (v: string | string[] | undefined) => (firstParam(v) ?
 export function PageTitle({ children, subtitle }: { children: React.ReactNode; subtitle?: React.ReactNode }) {
   return (
     <div className="mb-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{children}</h1>
+      <h1 className="page-title">{children}</h1>
       {subtitle ? <p className="mt-1 text-sm text-muted">{subtitle}</p> : null}
     </div>
   );
@@ -29,7 +29,7 @@ export function Pill({ active, href, children }: { active: boolean; href: string
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`rounded-full px-3 py-1.5 text-sm transition-colors ${
+      className={`chamfer-sm px-3 py-1.5 text-sm transition-colors ${
         active ? "bg-text text-bg" : "text-muted hover:bg-surface-2 hover:text-text"
       }`}
     >
@@ -59,9 +59,7 @@ export function Pagination({ prev, next }: { prev: string | null; next: string |
 }
 
 export function Empty({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="rounded-lg border border-dashed border-line px-4 py-12 text-center text-muted">{children}</p>
-  );
+  return <p className="border border-dashed border-line px-4 py-12 text-center text-muted">{children}</p>;
 }
 
 /** Busca por GET: funciona sem JavaScript e mantém a URL compartilhável. */
@@ -78,9 +76,9 @@ export function SearchForm({ action, defaultValue, label }: { action: string; de
         defaultValue={defaultValue}
         placeholder={label}
         maxLength={60}
-        className="min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 py-2 text-sm placeholder:text-muted focus:border-muted focus:outline-none"
+        className="min-w-0 flex-1 panel px-3 py-2 text-sm placeholder:text-muted focus:border-muted focus:outline-none"
       />
-      <button type="submit" className="rounded-lg bg-text px-4 py-2 text-sm text-bg hover:opacity-90">
+      <button type="submit" className="chamfer-sm bg-text px-4 py-2 text-sm text-bg hover:opacity-90">
         Buscar
       </button>
     </form>
@@ -117,7 +115,7 @@ export function Logo({ src, size = 28, rounded = false }: { src: string | null; 
 
 export function ListSkeleton({ rows = 6 }: { rows?: number }) {
   return (
-    <div aria-busy="true" aria-label="Carregando" className="rounded-lg border border-line bg-surface">
+    <div aria-busy="true" aria-label="Carregando" className="panel">
       {Array.from({ length: rows }, (_, i) => (
         <div key={i} className="border-b border-line px-4 py-3 last:border-b-0">
           <div className="h-7 animate-pulse rounded bg-surface-2" />

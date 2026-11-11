@@ -13,6 +13,7 @@ export const psTeamSchema = z.object({
   acronym: z.string().nullable(),
   location: z.string().nullable(),
   image_url: z.url().nullable(),
+  dark_mode_image_url: z.url().nullable().optional(),
 });
 
 export const psLeagueSchema = z.object({
@@ -67,9 +68,7 @@ export const psMatchSchema = z.object({
   opponents: z.array(z.object({ type: z.string(), opponent: psTeamSchema })),
   results: z.array(z.object({ team_id: id, score: z.number().int() })),
   games: z.array(psGameSchema),
-  streams_list: z.array(
-    z.object({ main: z.boolean(), official: z.boolean(), raw_url: z.url().nullable() }),
-  ),
+  streams_list: z.array(z.object({ main: z.boolean(), official: z.boolean(), raw_url: z.url().nullable() })),
   league: psLeagueSchema,
   serie: psSerieSchema,
   tournament: psTournamentSchema,

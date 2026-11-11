@@ -15,6 +15,7 @@ export async function upsertTeam(db: PrismaClient, team: TeamInput, cache: IdCac
     acronym: team.acronym,
     countryCode: team.countryCode,
     logoUrl: team.logoUrl,
+    logoDarkUrl: team.logoDarkUrl,
   };
   const row = await db.team.upsert({
     where: { source_externalId: { source: SOURCE, externalId: team.externalId } },

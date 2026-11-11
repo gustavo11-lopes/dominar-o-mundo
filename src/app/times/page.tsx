@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Country, Empty, ListSkeleton, Logo, PageTitle, Pagination, parsePage, parseQuery, SearchForm, type SearchParams } from "@/components/ui";
+import {
+  Country,
+  Empty,
+  ListSkeleton,
+  Logo,
+  PageTitle,
+  Pagination,
+  parsePage,
+  parseQuery,
+  SearchForm,
+  type SearchParams,
+} from "@/components/ui";
 import { getTeamList } from "@/server/queries/teams";
 
 export const metadata: Metadata = {
@@ -27,7 +38,9 @@ async function Teams({ searchParams }: { searchParams: SearchParams }) {
     <>
       <SearchForm action="/times" defaultValue={q} label="Buscar time pelo nome ou sigla" />
       <p className="mb-4 text-sm text-muted">
-        {q ? `Resultados para “${q}” em todo o catálogo.` : "Times que jogaram ou têm jogo marcado nos últimos 30 dias ou nos próximos 30."}
+        {q
+          ? `Resultados para “${q}” em todo o catálogo.`
+          : "Times que jogaram ou têm jogo marcado nos últimos 30 dias ou nos próximos 30."}
       </p>
       {items.length === 0 ? (
         <Empty>Nenhum time encontrado.</Empty>
@@ -35,10 +48,7 @@ async function Teams({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((t) => (
             <li key={t.slug}>
-              <Link
-                href={`/times/${t.slug}`}
-                className="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3 hover:border-muted"
-              >
+              <Link href={`/times/${t.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
                 <Logo src={t.logoUrl} size={36} />
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{t.name}</span>
@@ -59,7 +69,7 @@ async function Teams({ searchParams }: { searchParams: SearchParams }) {
 
 export default function TimesPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle>Times</PageTitle>
       <Suspense fallback={<ListSkeleton />}>
         <Teams searchParams={searchParams} />

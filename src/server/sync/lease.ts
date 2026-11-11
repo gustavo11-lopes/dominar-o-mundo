@@ -10,9 +10,7 @@ const LEASE_MS = 10 * 60_000;
 
 export type Failure = { id: unknown; reason: string };
 export type RunResult = { fetched: number; saved: number; failed: Failure[] };
-export type SyncReport =
-  | { status: "skipped"; reason: string }
-  | ({ status: "ok"; since: Date | null } & RunResult);
+export type SyncReport = { status: "skipped"; reason: string } | ({ status: "ok"; since: Date | null } & RunResult);
 
 export function describeError(err: unknown): string {
   if (err instanceof UnsupportedRecordError) return err.message;

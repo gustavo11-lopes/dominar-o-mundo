@@ -2,7 +2,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import type { Prisma, Tier } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
-import { matchSelect, teamSelect, toMatchView, type MatchView, type TeamView } from "./matches";
+import { matchSelect, teamSelect, toMatchView, toTeamView, type MatchView, type TeamView } from "./matches";
 import { DATA_TAG } from "./tags";
 
 export type TournamentTab = "atuais" | "proximos" | "encerrados";
@@ -154,8 +154,8 @@ export async function getTournament(slug: string): Promise<TournamentDetail | nu
       prizePool: s.prizePool,
       beginAt: s.beginAt?.toISOString() ?? null,
       endAt: s.endAt?.toISOString() ?? null,
-      winner: s.winner,
-      standings: s.standings,
+      winner: s.winner && toTeamView(s.winner),
+      standings: s.standings.map((row) => ({ ...row, team: toTeamView(row.team) })),
       matches: s.matches.map(toMatchView),
     })),
   };

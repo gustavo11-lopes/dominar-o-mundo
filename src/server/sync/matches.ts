@@ -181,11 +181,7 @@ async function saveMatch(db: PrismaClient, input: MatchInput, cache: IdCache) {
  * Sincroniza partidas do provedor para o banco. Idempotente: rodar duas vezes com os mesmos
  * dados não muda nada. Um registro inválido não derruba os demais; vai para o relatório.
  */
-export function syncMatches(
-  db: PrismaClient,
-  fetchMatches: MatchFetcher,
-  now: Date = new Date(),
-): Promise<SyncReport> {
+export function syncMatches(db: PrismaClient, fetchMatches: MatchFetcher, now: Date = new Date()): Promise<SyncReport> {
   return runWithLease(db, "MATCHES", now, async (since) => {
     const raw = await fetchMatches(since, now);
     const cache: IdCache = new Map();

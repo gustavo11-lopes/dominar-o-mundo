@@ -29,7 +29,7 @@ async function PlayerContent({ params }: { params: Params }) {
       <header className="mb-8 flex items-center gap-4">
         <Logo src={p.imageUrl} size={88} rounded />
         <div className="min-w-0">
-          <h1 className="truncate text-3xl font-semibold tracking-tight">{p.handle}</h1>
+          <h1 className="page-title">{p.handle}</h1>
           <p className="mt-1 text-sm text-muted">{p.fullName ?? "Nome não informado"}</p>
           <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
             <Country code={p.countryCode} />
@@ -47,24 +47,34 @@ async function PlayerContent({ params }: { params: Params }) {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <section aria-labelledby="partidas" className="min-w-0">
-          <h2 id="partidas" className="mb-1 font-semibold">
+          <h2 id="partidas" className="mb-3 section-title">
             {p.team ? `Partidas recentes de ${p.team.name}` : "Partidas recentes"}
           </h2>
-          <p className="mb-2 text-xs text-muted">A fonte não informa a escalação de cada partida; estas são as partidas do time atual.</p>
-          {p.teamMatches.length ? <MatchList matches={p.teamMatches} showDate /> : <Empty>Nenhuma partida registrada.</Empty>}
+          <p className="mb-2 text-xs text-muted">
+            A fonte não informa a escalação de cada partida; estas são as partidas do time atual.
+          </p>
+          {p.teamMatches.length ? (
+            <MatchList matches={p.teamMatches} showDate />
+          ) : (
+            <Empty>Nenhuma partida registrada.</Empty>
+          )}
         </section>
 
         <aside aria-labelledby="historico">
-          <h2 id="historico" className="mb-2 font-semibold">Histórico de times</h2>
+          <h2 id="historico" className="mb-3 section-title">
+            Histórico de times
+          </h2>
           {p.history.length ? (
-            <ul className="divide-y divide-line rounded-lg border border-line bg-surface">
+            <ul className="divide-y divide-line panel">
               {p.history.map((h) => (
                 <li key={`${h.team.slug}-${h.startedAt}`}>
                   <Link href={`/times/${h.team.slug}`} className="flex items-center gap-3 px-4 py-3 hover:bg-surface-2">
                     <Logo src={h.team.logoUrl} />
                     <span className="min-w-0">
                       <span className="block truncate">{h.team.name}</span>
-                      <span className="block text-xs text-muted">{period(h.startedAt, h.startObserved, h.endedAt)}</span>
+                      <span className="block text-xs text-muted">
+                        {period(h.startedAt, h.startObserved, h.endedAt)}
+                      </span>
                     </span>
                   </Link>
                 </li>
@@ -84,7 +94,7 @@ async function PlayerContent({ params }: { params: Params }) {
 
 export default function PlayerPage({ params }: { params: Params }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <Suspense fallback={<ListSkeleton />}>
         <PlayerContent params={params} />
       </Suspense>

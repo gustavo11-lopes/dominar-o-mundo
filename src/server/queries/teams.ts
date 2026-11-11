@@ -17,7 +17,19 @@ export type TeamCard = {
   logoUrl: string | null;
 };
 
-const cardSelect = { slug: true, name: true, acronym: true, countryCode: true, logoUrl: true } satisfies Prisma.TeamSelect;
+const cardSelect = {
+  slug: true,
+  name: true,
+  acronym: true,
+  countryCode: true,
+  logoUrl: true,
+  logoDarkUrl: true,
+} satisfies Prisma.TeamSelect;
+
+const toCard = ({ logoDarkUrl, logoUrl, ...t }: Prisma.TeamGetPayload<{ select: typeof cardSelect }>): TeamCard => ({
+  ...t,
+  logoUrl: logoDarkUrl ?? logoUrl,
+});
 
 /** Com busca: procura no catálogo inteiro. Sem busca: só times em atividade. */
 export async function getTeamList(query: string, page: number): Promise<{ items: TeamCard[]; hasNext: boolean }> {
@@ -28,10 +40,7 @@ export async function getTeamList(query: string, page: number): Promise<{ items:
   let where: Prisma.TeamWhereInput;
   if (query) {
     where = {
-      OR: [
-        { name: { contains: query, mode: "insensitive" } },
-        { acronym: { contains: query, mode: "insensitive" } },
-      ],
+      OR: [{ name: { contains: query, mode: "insensitive" } }, { acronym: { contains: query, mode: "insensitive" } }],
     };
   } else {
     const now = Date.now();
@@ -48,7 +57,7 @@ export async function getTeamList(query: string, page: number): Promise<{ items:
     take: TEAMS_PAGE_SIZE + 1,
     select: cardSelect,
   });
-  return { items: rows.slice(0, TEAMS_PAGE_SIZE), hasNext: rows.length > TEAMS_PAGE_SIZE };
+  return { items: rows.slice(0, TEAMS_PAGE_SIZE).map(toCard), hasNext: rows.length > TEAMS_PAGE_SIZE };
 }
 
 export type RosterEntry = {
@@ -145,7 +154,7 @@ export async function getTeam(slug: string): Promise<TeamDetail | null> {
     name: team.name,
     acronym: team.acronym,
     countryCode: team.countryCode,
-    logoUrl: team.logoUrl,
+    logoUrl: team.logoDarkUrl ?? team.logoUrl,
     roster: team.stints.filter((s) => !s.endedAt).map(toEntry),
     formerPlayers: team.stints.filter((s) => s.endedAt).map(toEntry),
     upcoming: upcoming.map(toMatchView),

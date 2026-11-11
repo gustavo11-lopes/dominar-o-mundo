@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Country, Empty, ListSkeleton, Logo, PageTitle, Pagination, parsePage, parseQuery, SearchForm, type SearchParams } from "@/components/ui";
+import {
+  Country,
+  Empty,
+  ListSkeleton,
+  Logo,
+  PageTitle,
+  Pagination,
+  parsePage,
+  parseQuery,
+  SearchForm,
+  type SearchParams,
+} from "@/components/ui";
 import { getPlayerList } from "@/server/queries/players";
 
 export const metadata: Metadata = {
@@ -32,10 +43,7 @@ async function Players({ searchParams }: { searchParams: SearchParams }) {
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p) => (
             <li key={p.slug}>
-              <Link
-                href={`/jogadores/${p.slug}`}
-                className="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3 hover:border-muted"
-              >
+              <Link href={`/jogadores/${p.slug}`} className="flex items-center gap-3 panel-link px-4 py-3">
                 <Logo src={p.imageUrl} size={36} rounded />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{p.handle}</span>
@@ -57,7 +65,7 @@ async function Players({ searchParams }: { searchParams: SearchParams }) {
 
 export default function JogadoresPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <PageTitle subtitle="Jogadores com time atual.">Jogadores</PageTitle>
       <Suspense fallback={<ListSkeleton />}>
         <Players searchParams={searchParams} />

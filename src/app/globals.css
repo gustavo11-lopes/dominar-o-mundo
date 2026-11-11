@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
-/* Base provisória. A identidade visual completa é a Fase 4. */
+/*
+  Identidade: placar de arena. Preto de palco, grafite de equipamento, um vermelho de sinal.
+  Tipografia condensada de estádio (Big Shoulders) para nomes, placares e títulos;
+  IBM Plex Sans para o texto. Cantos chanfrados só nos painéis de destaque.
+*/
 :root {
-  --bg: #0b0b0d;
-  --surface: #141418;
-  --surface-2: #1c1c22;
-  --line: #2a2a32;
-  --text: #ededf0;
-  --muted: #9b9ba6;
-  --accent: #ff4655;
-  --live: #ff4655;
+  --bg: #050506;
+  --surface: #111215;
+  --surface-2: #1a1c21;
+  --line: #272a31;
+  --text: #ece9e3;
+  --muted: #8a8f98;
+  --accent: #e8273b;
+  --live: #e8273b;
   color-scheme: dark;
 }
 
@@ -22,8 +26,8 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-live: var(--live);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plex);
+  --font-display: var(--font-shoulders);
 }
 
 body {
@@ -31,11 +35,133 @@ body {
   color: var(--text);
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Canto chanfrado (superior direito e inferior esquerdo), como placas de arena. */
+@utility chamfer {
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+@utility chamfer-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+/* Superfícies. `panel` é o bloco base; `panel-link` é o mesmo bloco quando ele inteiro é clicável. */
+@utility panel {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+@utility panel-link {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition:
+    border-color 150ms,
+    background-color 150ms;
+  &:hover {
+    border-color: var(--muted);
+    background: var(--surface-2);
+  }
+}
+
+/* Etiqueta curta de metadado (tier, região, status). */
+@utility tag {
+  display: inline-block;
+  background: var(--surface-2);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+/* Títulos de página e de seção na tipografia de estádio. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+}
+
+/* Hierarquia de títulos: página > seção. Nomes longos quebram em vez de cortar. */
+@utility page-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+}
+@utility section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  font-size: 1.625rem;
+}
+
+/* Piso em perspectiva atrás do confronto da home. */
+.arena-floor {
+  position: absolute;
+  inset: auto -20% -40% -20%;
+  height: 90%;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--line) 70%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(520px) rotateX(62deg);
+  transform-origin: center top;
+  mask-image: linear-gradient(to bottom, transparent, black 30%, transparent 95%);
+  pointer-events: none;
+}
+
+/* Entrada do confronto: os dois lados avançam, o VS acende. Uma vez, só na home. */
+@keyframes enter-left {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+}
+@keyframes enter-right {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+}
+@keyframes ignite {
+  0% {
+    opacity: 0;
+    transform: scale(1.6);
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.enter-left {
+  animation: enter-left 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.enter-right {
+  animation: enter-right 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ignite {
+  animation: ignite 600ms 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

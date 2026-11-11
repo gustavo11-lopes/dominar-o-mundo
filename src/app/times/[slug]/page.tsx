@@ -41,7 +41,7 @@ async function TeamContent({ params }: { params: Params }) {
       <header className="mb-8 flex items-center gap-4">
         <Logo src={team.logoUrl} size={72} />
         <div className="min-w-0">
-          <h1 className="truncate text-3xl font-semibold tracking-tight">{team.name}</h1>
+          <h1 className="page-title">{team.name}</h1>
           <p className="mt-1 text-sm text-muted">
             {team.acronym ? `${team.acronym} · ` : ""}
             <Country code={team.countryCode} />
@@ -52,20 +52,34 @@ async function TeamContent({ params }: { params: Params }) {
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-8">
           <section aria-labelledby="proximas">
-            <h2 id="proximas" className="mb-2 font-semibold">Próximas partidas</h2>
-            {team.upcoming.length ? <MatchList matches={team.upcoming} showDate /> : <Empty>Nenhuma partida marcada.</Empty>}
+            <h2 id="proximas" className="mb-3 section-title">
+              Próximas partidas
+            </h2>
+            {team.upcoming.length ? (
+              <MatchList matches={team.upcoming} showDate />
+            ) : (
+              <Empty>Nenhuma partida marcada.</Empty>
+            )}
           </section>
           <section aria-labelledby="resultados">
-            <h2 id="resultados" className="mb-2 font-semibold">Resultados recentes</h2>
-            {team.recent.length ? <MatchList matches={team.recent} showDate /> : <Empty>Nenhum resultado registrado.</Empty>}
+            <h2 id="resultados" className="mb-3 section-title">
+              Resultados recentes
+            </h2>
+            {team.recent.length ? (
+              <MatchList matches={team.recent} showDate />
+            ) : (
+              <Empty>Nenhum resultado registrado.</Empty>
+            )}
           </section>
         </div>
 
         <aside className="space-y-8">
           <section aria-labelledby="elenco">
-            <h2 id="elenco" className="mb-2 font-semibold">Elenco atual</h2>
+            <h2 id="elenco" className="mb-3 section-title">
+              Elenco atual
+            </h2>
             {team.roster.length ? (
-              <ul className="divide-y divide-line rounded-lg border border-line bg-surface">
+              <ul className="divide-y divide-line panel">
                 {team.roster.map((p) => (
                   <PlayerItem key={p.slug} p={p} />
                 ))}
@@ -76,8 +90,10 @@ async function TeamContent({ params }: { params: Params }) {
           </section>
 
           {played > 0 && team.record.since ? (
-            <section aria-labelledby="campanha" className="rounded-lg border border-line bg-surface p-4">
-              <h2 id="campanha" className="mb-1 font-semibold">Campanha registrada</h2>
+            <section aria-labelledby="campanha" className="panel p-4">
+              <h2 id="campanha" className="mb-3 section-title">
+                Campanha registrada
+              </h2>
               <p className="text-2xl font-semibold tabular-nums">
                 {team.record.wins}V <span className="text-muted">·</span> {team.record.losses}D
               </p>
@@ -89,12 +105,17 @@ async function TeamContent({ params }: { params: Params }) {
 
           {team.standings.length ? (
             <section aria-labelledby="colocacoes">
-              <h2 id="colocacoes" className="mb-2 font-semibold">Colocações</h2>
-              <ul className="divide-y divide-line rounded-lg border border-line bg-surface text-sm">
+              <h2 id="colocacoes" className="mb-3 section-title">
+                Colocações
+              </h2>
+              <ul className="divide-y divide-line panel text-sm">
                 {team.standings.map((s) => (
                   <li key={`${s.tournamentSlug}-${s.stage}`}>
-                    <Link href={`/campeonatos/${s.tournamentSlug}`} className="flex gap-3 px-4 py-2.5 hover:bg-surface-2">
-                      <span className="w-8 shrink-0 font-mono tabular-nums">{s.rank}º</span>
+                    <Link
+                      href={`/campeonatos/${s.tournamentSlug}`}
+                      className="flex gap-3 px-4 py-2.5 hover:bg-surface-2"
+                    >
+                      <span className="w-8 shrink-0 display text-lg tabular-nums">{s.rank}º</span>
                       <span className="min-w-0 truncate">
                         {s.tournament} <span className="text-muted">· {s.stage}</span>
                       </span>
@@ -107,8 +128,10 @@ async function TeamContent({ params }: { params: Params }) {
 
           {team.formerPlayers.length ? (
             <section aria-labelledby="ex">
-              <h2 id="ex" className="mb-2 font-semibold">Saíram do elenco</h2>
-              <ul className="divide-y divide-line rounded-lg border border-line bg-surface">
+              <h2 id="ex" className="mb-3 section-title">
+                Saíram do elenco
+              </h2>
+              <ul className="divide-y divide-line panel">
                 {team.formerPlayers.map((p) => (
                   <PlayerItem key={`${p.slug}-${p.startedAt}`} p={p} />
                 ))}
@@ -123,7 +146,7 @@ async function TeamContent({ params }: { params: Params }) {
 
 export default function TeamPage({ params }: { params: Params }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <Suspense fallback={<ListSkeleton />}>
         <TeamContent params={params} />
       </Suspense>

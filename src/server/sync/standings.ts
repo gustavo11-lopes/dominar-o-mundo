@@ -41,7 +41,9 @@ export function syncStandings(
           const parsed = psStandingSchema.safeParse(item);
           if (!parsed.success) {
             const issue = parsed.error.issues[0];
-            throw new UnsupportedRecordError(`classificação da fase ${stage.externalId}: ${issue.path.join(".")} ${issue.message}`);
+            throw new UnsupportedRecordError(
+              `classificação da fase ${stage.externalId}: ${issue.path.join(".")} ${issue.message}`,
+            );
           }
           return mapStanding(parsed.data);
         });

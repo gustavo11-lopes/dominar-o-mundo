@@ -108,8 +108,5 @@ export async function fetchAllPages(
     if (data.length < PAGE_SIZE) return items;
   }
 
-  throw new PandaScoreError(
-    `${path} passou de ${maxPages} páginas. Janela de sincronização grande demais.`,
-    null,
-  );
+  throw new PandaScoreError(`${path} passou de ${maxPages} páginas. Janela de sincronização grande demais.`, null);
 }

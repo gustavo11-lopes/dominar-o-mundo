@@ -19,18 +19,28 @@ function Standings({ stage }: { stage: StageDetail }) {
   const hasRecord = stage.standings.some((s) => s.wins !== null);
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+    <div className="overflow-x-auto panel">
       <table className="w-full text-sm">
         <caption className="sr-only">Classificação de {stage.name}</caption>
         <thead className="text-xs text-muted">
           <tr className="border-b border-line">
-            <th scope="col" className="w-10 px-4 py-2 text-left font-normal">#</th>
-            <th scope="col" className="px-2 py-2 text-left font-normal">Time</th>
+            <th scope="col" className="w-10 px-4 py-2 text-left font-normal">
+              #
+            </th>
+            <th scope="col" className="px-2 py-2 text-left font-normal">
+              Time
+            </th>
             {hasRecord ? (
               <>
-                <th scope="col" className="px-2 py-2 text-right font-normal"><abbr title="Vitórias em séries">V</abbr></th>
-                <th scope="col" className="px-2 py-2 text-right font-normal"><abbr title="Derrotas em séries">D</abbr></th>
-                <th scope="col" className="px-4 py-2 text-right font-normal">Mapas</th>
+                <th scope="col" className="px-2 py-2 text-right font-normal">
+                  <abbr title="Vitórias em séries">V</abbr>
+                </th>
+                <th scope="col" className="px-2 py-2 text-right font-normal">
+                  <abbr title="Derrotas em séries">D</abbr>
+                </th>
+                <th scope="col" className="px-4 py-2 text-right font-normal">
+                  Mapas
+                </th>
               </>
             ) : null}
           </tr>
@@ -38,7 +48,7 @@ function Standings({ stage }: { stage: StageDetail }) {
         <tbody>
           {stage.standings.map((s) => (
             <tr key={s.team.slug} className="border-b border-line last:border-b-0">
-              <td className="px-4 py-2 font-mono tabular-nums">{s.rank}</td>
+              <td className="px-4 py-2 display text-lg tabular-nums">{s.rank}</td>
               <td className="px-2 py-2">
                 <Link href={`/times/${s.team.slug}`} className="flex items-center gap-2 hover:text-accent">
                   <Logo src={s.team.logoUrl} size={20} />
@@ -71,20 +81,22 @@ async function TournamentContent({ params }: { params: Params }) {
       <header className="mb-8 flex items-center gap-4">
         <Logo src={t.leagueImageUrl} size={64} />
         <div className="min-w-0">
-          <h1 className="text-3xl font-semibold tracking-tight">{t.name}</h1>
+          <h1 className="page-title">{t.name}</h1>
           <p className="mt-1 text-sm text-muted">
             {t.league} · {formatRange(t.beginAt, t.endAt)}
           </p>
-          {t.prizePools.length ? (
-            <p className="mt-1 text-sm">Premiação divulgada: {t.prizePools.join(" + ")}</p>
-          ) : null}
+          {t.prizePools.length ? <p className="mt-1 text-sm">Premiação divulgada: {t.prizePools.join(" + ")}</p> : null}
         </div>
       </header>
 
       {t.stages.length > 1 ? (
         <nav aria-label="Fases" className="mb-8 flex flex-wrap gap-1">
           {t.stages.map((s) => (
-            <a key={s.slug} href={`#${s.slug}`} className="rounded-full px-3 py-1.5 text-sm text-muted hover:bg-surface-2 hover:text-text">
+            <a
+              key={s.slug}
+              href={`#${s.slug}`}
+              className="chamfer-sm px-3 py-1.5 text-sm text-muted hover:bg-surface-2 hover:text-text"
+            >
               {s.name}
             </a>
           ))}
@@ -95,7 +107,9 @@ async function TournamentContent({ params }: { params: Params }) {
         {t.stages.map((s) => (
           <section key={s.slug} id={s.slug} aria-labelledby={`${s.slug}-titulo`} className="scroll-mt-6">
             <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h2 id={`${s.slug}-titulo`} className="text-xl font-semibold">{s.name}</h2>
+              <h2 id={`${s.slug}-titulo`} className="section-title">
+                {s.name}
+              </h2>
               <span className="text-sm text-muted">
                 {formatRange(s.beginAt, s.endAt)}
                 {s.tier !== "UNRANKED" ? ` · Tier ${s.tier}` : ""}
@@ -105,7 +119,10 @@ async function TournamentContent({ params }: { params: Params }) {
             {s.winner ? (
               <p className="mb-3 flex items-center gap-2 text-sm">
                 <span className="text-muted">Campeão:</span>
-                <Link href={`/times/${s.winner.slug}`} className="flex items-center gap-1.5 font-medium hover:text-accent">
+                <Link
+                  href={`/times/${s.winner.slug}`}
+                  className="flex items-center gap-1.5 font-medium hover:text-accent"
+                >
                   <Logo src={s.winner.logoUrl} size={20} />
                   {s.winner.name}
                 </Link>
@@ -136,7 +153,7 @@ async function TournamentContent({ params }: { params: Params }) {
 
 export default function TournamentPage({ params }: { params: Params }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <Suspense fallback={<ListSkeleton />}>
         <TournamentContent params={params} />
       </Suspense>

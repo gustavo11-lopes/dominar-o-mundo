@@ -11,6 +11,7 @@ export type TeamInput = {
   acronym: string | null;
   countryCode: string | null;
   logoUrl: string | null;
+  logoDarkUrl: string | null;
 };
 
 export type MatchInput = {
@@ -99,6 +100,7 @@ export function mapTeam(team: PsTeam): TeamInput {
     acronym: blankToNull(team.acronym),
     countryCode: countryCode(team.location),
     logoUrl: team.image_url,
+    logoDarkUrl: team.dark_mode_image_url ?? null,
   };
 }
 

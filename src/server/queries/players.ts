@@ -1,7 +1,7 @@
 import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
-import { matchSelect, teamSelect, toMatchView, type MatchView, type TeamView } from "./matches";
+import { matchSelect, teamSelect, toMatchView, toTeamView, type MatchView, type TeamView } from "./matches";
 import { DATA_TAG } from "./tags";
 
 export const PLAYERS_PAGE_SIZE = 48;
@@ -57,7 +57,7 @@ export async function getPlayerList(query: string, page: number): Promise<{ item
       fullName: fullName(p.firstName, p.lastName),
       countryCode: p.countryCode,
       imageUrl: p.imageUrl,
-      team: p.stints[0]?.team ?? null,
+      team: p.stints[0] ? toTeamView(p.stints[0].team) : null,
     })),
     hasNext: rows.length > PLAYERS_PAGE_SIZE,
   };
@@ -116,9 +116,9 @@ export async function getPlayer(slug: string): Promise<PlayerDetail | null> {
     fullName: fullName(p.firstName, p.lastName),
     countryCode: p.countryCode,
     imageUrl: p.imageUrl,
-    team: current?.team ?? null,
+    team: current ? toTeamView(current.team) : null,
     history: p.stints.map((s) => ({
-      team: s.team,
+      team: toTeamView(s.team),
       startedAt: s.startedAt.toISOString(),
       startObserved: s.startObserved,
       endedAt: s.endedAt?.toISOString() ?? null,
