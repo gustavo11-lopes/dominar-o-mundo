@@ -1,5 +1,5 @@
 import type { MapStatus, MatchStatus, Tier } from "@/generated/prisma/enums";
-import type { PsMatch, PsTeam } from "./schemas";
+import type { PsMatch, PsPlayer, PsStanding, PsTeam } from "./schemas";
 
 // Conversão pura do formato da PandaScore para o nosso. Sem banco, sem rede: testável isoladamente.
 // Hierarquia: league (circuito) -> serie (nosso Tournament) -> tournament (nossa Stage) -> match.
@@ -91,11 +91,11 @@ function countryCode(location: string | null): string | null {
   return code && /^[A-Z]{2}$/.test(code) ? code : null;
 }
 
-function mapTeam(team: PsTeam): TeamInput {
+export function mapTeam(team: PsTeam): TeamInput {
   return {
     externalId: String(team.id),
     slug: team.slug ?? `team-${team.id}`,
-    name: team.name,
+    name: team.name.trim(),
     acronym: blankToNull(team.acronym),
     countryCode: countryCode(team.location),
     logoUrl: team.image_url,
@@ -184,6 +184,48 @@ export function mapMatch(m: PsMatch): MatchInput {
         endAt: date(g.end_at),
       };
     }),
+  };
+}
+
+export type PlayerInput = {
+  externalId: string;
+  slug: string;
+  handle: string;
+  firstName: string | null;
+  lastName: string | null;
+  countryCode: string | null;
+  imageUrl: string | null;
+};
+
+export function mapPlayer(p: PsPlayer): PlayerInput {
+  return {
+    externalId: String(p.id),
+    slug: p.slug ?? `player-${p.id}`,
+    handle: p.name.trim(),
+    firstName: blankToNull(p.first_name),
+    lastName: blankToNull(p.last_name),
+    countryCode: countryCode(p.nationality),
+    imageUrl: p.image_url,
+  };
+}
+
+export type StandingInput = {
+  team: TeamInput;
+  rank: number;
+  wins: number | null;
+  losses: number | null;
+  mapWins: number | null;
+  mapLosses: number | null;
+};
+
+export function mapStanding(s: PsStanding): StandingInput {
+  return {
+    team: mapTeam(s.team),
+    rank: s.rank,
+    wins: s.wins ?? null,
+    losses: s.losses ?? null,
+    mapWins: s.game_wins ?? null,
+    mapLosses: s.game_losses ?? null,
   };
 }
 

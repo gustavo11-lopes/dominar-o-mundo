@@ -1,8 +1,8 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { db } from "@/lib/db";
-import { MATCHES_TAG } from "@/server/queries/matches";
-import { pandaScoreFetcher, syncMatches } from "@/server/sync/matches";
+import { DATA_TAG } from "@/server/queries/tags";
+import { runAllSyncs } from "@/server/sync/run";
 
 export const maxDuration = 60;
 
@@ -26,16 +26,24 @@ export async function GET(request: Request) {
     return Response.json({ error: { code: "SYNC_NOT_CONFIGURED" } }, { status: 500 });
   }
 
-  try {
-    const report = await syncMatches(db, pandaScoreFetcher(token));
-    if (report.status === "ok") {
-      if (report.saved > 0) revalidateTag(MATCHES_TAG, "max");
-      for (const f of report.failed) console.warn(`[sync] partida ignorada ${String(f.id)}: ${f.reason}`);
-      return Response.json({ status: "ok", fetched: report.fetched, saved: report.saved, failed: report.failed.length });
+  const results = await runAllSyncs(db, token);
+  const summary: Record<string, unknown> = {};
+  let changed = false;
+  let failed = false;
+
+  for (const [name, r] of Object.entries(results)) {
+    if (r.status === "ok") {
+      changed ||= r.saved > 0;
+      for (const f of r.failed) console.warn(`[sync] ${name}: ignorado ${String(f.id)}: ${f.reason}`);
+      summary[name] = { status: "ok", fetched: r.fetched, saved: r.saved, failed: r.failed.length };
+    } else if (r.status === "skipped") {
+      summary[name] = r;
+    } else {
+      failed = true;
+      summary[name] = { status: "error" };
     }
-    return Response.json(report);
-  } catch (err) {
-    console.error("[sync] falhou", err);
-    return Response.json({ error: { code: "SYNC_FAILED" } }, { status: 502 });
   }
+
+  if (changed) revalidateTag(DATA_TAG, "max");
+  return Response.json(summary, { status: failed ? 502 : 200 });
 }

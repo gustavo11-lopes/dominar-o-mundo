@@ -2,15 +2,15 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import type { MatchStatus, Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { DATA_TAG } from "./tags";
 
-export const MATCHES_TAG = "matches";
 export const PAGE_SIZE = 30;
 /** Partida agendada que passou disso sem começar sai de "Próximas" (provedor não atualizou). */
 const STALE_SCHEDULED_MS = 12 * 3_600_000;
 
 export type MatchTab = "proximas" | "resultados";
 
-export type TeamView = { name: string; acronym: string | null; logoUrl: string | null };
+export type TeamView = { slug: string; name: string; acronym: string | null; logoUrl: string | null };
 
 export type MatchView = {
   id: string;
@@ -26,10 +26,13 @@ export type MatchView = {
   winner: "A" | "B" | null;
   stage: string;
   tournament: string;
+  tournamentSlug: string;
   tier: string;
 };
 
-const select = {
+export const teamSelect = { slug: true, name: true, acronym: true, logoUrl: true } satisfies Prisma.TeamSelect;
+
+export const matchSelect = {
   id: true,
   status: true,
   scheduledAt: true,
@@ -41,14 +44,14 @@ const select = {
   teamAId: true,
   teamBId: true,
   winnerTeamId: true,
-  teamA: { select: { name: true, acronym: true, logoUrl: true } },
-  teamB: { select: { name: true, acronym: true, logoUrl: true } },
-  stage: { select: { name: true, tier: true, tournament: { select: { name: true } } } },
+  teamA: { select: teamSelect },
+  teamB: { select: teamSelect },
+  stage: { select: { name: true, tier: true, tournament: { select: { name: true, slug: true } } } },
 } satisfies Prisma.MatchSelect;
 
-type Row = Prisma.MatchGetPayload<{ select: typeof select }>;
+type Row = Prisma.MatchGetPayload<{ select: typeof matchSelect }>;
 
-function toView(row: Row): MatchView {
+export function toMatchView(row: Row): MatchView {
   return {
     id: row.id,
     status: row.status,
@@ -64,6 +67,7 @@ function toView(row: Row): MatchView {
       row.winnerTeamId === null ? null : row.winnerTeamId === row.teamAId ? "A" : row.winnerTeamId === row.teamBId ? "B" : null,
     stage: row.stage.name,
     tournament: row.stage.tournament.name,
+    tournamentSlug: row.stage.tournament.slug,
     tier: row.stage.tier,
   };
 }
@@ -72,7 +76,7 @@ export type MatchList = { live: MatchView[]; items: MatchView[]; hasNext: boolea
 
 export async function getMatchList(tab: MatchTab, majorOnly: boolean, page: number): Promise<MatchList> {
   "use cache";
-  cacheTag(MATCHES_TAG);
+  cacheTag(DATA_TAG);
   cacheLife("minutes");
 
   const tierFilter: Prisma.MatchWhereInput = majorOnly ? { stage: { tier: { in: ["S", "A"] } } } : {};
@@ -84,9 +88,9 @@ export async function getMatchList(tab: MatchTab, majorOnly: boolean, page: numb
       orderBy: [{ scheduledAt: { sort: "desc", nulls: "last" } }, { id: "desc" }],
       skip,
       take: PAGE_SIZE + 1,
-      select,
+      select: matchSelect,
     });
-    return { live: [], items: rows.slice(0, PAGE_SIZE).map(toView), hasNext: rows.length > PAGE_SIZE };
+    return { live: [], items: rows.slice(0, PAGE_SIZE).map(toMatchView), hasNext: rows.length > PAGE_SIZE };
   }
 
   const staleBefore = new Date(Date.now() - STALE_SCHEDULED_MS);
@@ -96,7 +100,7 @@ export async function getMatchList(tab: MatchTab, majorOnly: boolean, page: numb
           where: { status: "LIVE", ...tierFilter },
           orderBy: [{ scheduledAt: { sort: "asc", nulls: "last" } }, { id: "asc" }],
           take: 50,
-          select,
+          select: matchSelect,
         })
       : Promise.resolve([]),
     db.match.findMany({
@@ -108,13 +112,13 @@ export async function getMatchList(tab: MatchTab, majorOnly: boolean, page: numb
       orderBy: [{ scheduledAt: { sort: "asc", nulls: "last" } }, { id: "asc" }],
       skip,
       take: PAGE_SIZE + 1,
-      select,
+      select: matchSelect,
     }),
   ]);
 
   return {
-    live: live.map(toView),
-    items: rows.slice(0, PAGE_SIZE).map(toView),
+    live: live.map(toMatchView),
+    items: rows.slice(0, PAGE_SIZE).map(toMatchView),
     hasNext: rows.length > PAGE_SIZE,
   };
 }
@@ -122,7 +126,7 @@ export async function getMatchList(tab: MatchTab, majorOnly: boolean, page: numb
 /** Quando os dados foram atualizados pela última vez. Nulo antes da primeira sincronização. */
 export async function getLastSync(): Promise<string | null> {
   "use cache";
-  cacheTag(MATCHES_TAG);
+  cacheTag(DATA_TAG);
   cacheLife("minutes");
 
   const state = await db.syncState.findUnique({

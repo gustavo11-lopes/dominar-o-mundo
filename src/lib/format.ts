@@ -34,3 +34,37 @@ export function groupByDay<T extends { scheduledAt: string | null }>(items: T[])
   }
   return [...groups.values()];
 }
+
+const shortDate = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: SITE_TIME_ZONE,
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+export const formatDate = (iso: string) => shortDate.format(new Date(iso)).replace(/ de /g, " ").replace(".", "");
+
+export function formatRange(begin: string | null, end: string | null) {
+  if (begin && end) return `${formatDate(begin)} – ${formatDate(end)}`;
+  if (begin) return `A partir de ${formatDate(begin)}`;
+  if (end) return `Até ${formatDate(end)}`;
+  return "Datas a definir";
+}
+
+const countryNames = new Intl.DisplayNames(["pt-BR"], { type: "region" });
+
+/** Nome do país em português a partir do código ISO de 2 letras. */
+export function countryName(code: string) {
+  try {
+    return countryNames.of(code) ?? code;
+  } catch {
+    return code;
+  }
+}
+
+/** Emoji de bandeira a partir do código ISO de 2 letras. */
+export function flag(code: string) {
+  return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
+}
+
+const dayMonth = new Intl.DateTimeFormat("pt-BR", { timeZone: SITE_TIME_ZONE, day: "2-digit", month: "2-digit" });
+export const formatDayMonth = (iso: string) => dayMonth.format(new Date(iso));

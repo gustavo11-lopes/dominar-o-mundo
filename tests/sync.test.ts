@@ -24,7 +24,7 @@ describe.skipIf(!url)("syncMatches (Postgres)", () => {
 
   beforeEach(async () => {
     await db.$executeRawUnsafe(
-      `TRUNCATE region, team, player, player_team_stint, league, tournament, stage, match, match_map, sync_state CASCADE`,
+      `TRUNCATE region, team, player, player_team_stint, league, tournament, stage, stage_standing, match, match_map, sync_state CASCADE`,
     );
   });
   afterAll(() => db.$disconnect());
@@ -57,7 +57,7 @@ describe.skipIf(!url)("syncMatches (Postgres)", () => {
     expect(report.status === "ok" && report.failed[0].reason).toMatch(/status desconhecido/);
 
     const state = await db.syncState.findFirstOrThrow();
-    expect(state.lastError).toMatch(/1 partida/);
+    expect(state.lastError).toMatch(/1 registro/);
   });
 
   it("atualiza a série e remove mapas que o provedor deixou de enviar", async () => {

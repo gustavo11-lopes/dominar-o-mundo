@@ -2,14 +2,14 @@
 
 import { useEffect } from "react";
 
-export default function PartidasError({ error, retry }: { error: unknown; retry: () => void }) {
+export default function RouteError({ error, retry }: { error: unknown; retry: () => void }) {
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-16 text-center">
-      <h1 className="mb-2 text-xl font-semibold">Não foi possível carregar as partidas</h1>
+      <h1 className="mb-2 text-xl font-semibold">Não foi possível carregar esta página</h1>
       <p className="mb-6 text-muted">O problema é do nosso lado. Tente de novo em instantes.</p>
       <button
         type="button"

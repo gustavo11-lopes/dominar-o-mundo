@@ -1,25 +1,25 @@
-import Image from "next/image";
-import { formatTime } from "@/lib/format";
+import Link from "next/link";
+import { formatDayMonth, formatTime } from "@/lib/format";
 import type { MatchView, TeamView } from "@/server/queries/matches";
-
-function TeamLogo({ team }: { team: TeamView | null }) {
-  if (team?.logoUrl) {
-    return <Image src={team.logoUrl} alt="" width={28} height={28} className="size-7 shrink-0 object-contain" />;
-  }
-  return <span aria-hidden className="size-7 shrink-0 rounded bg-surface-2" />;
-}
+import { Logo } from "./ui";
 
 function TeamName({ team, won, align }: { team: TeamView | null; won: boolean; align: "left" | "right" }) {
-  return (
-    <span
-      className={`flex min-w-0 flex-1 items-center gap-2 ${align === "right" ? "flex-row-reverse text-right" : ""}`}
-    >
-      <TeamLogo team={team} />
+  const body = (
+    <>
+      <Logo src={team?.logoUrl ?? null} />
       <span className={`truncate ${team ? "" : "text-muted"} ${won ? "font-semibold" : ""}`}>
         <span className="hidden sm:inline">{team?.name ?? "A definir"}</span>
         <span className="sm:hidden">{team?.acronym ?? team?.name ?? "A definir"}</span>
       </span>
-    </span>
+    </>
+  );
+  const cls = `flex min-w-0 flex-1 items-center gap-2 ${align === "right" ? "flex-row-reverse text-right" : ""}`;
+  return team ? (
+    <Link href={`/times/${team.slug}`} className={`${cls} hover:text-accent`}>
+      {body}
+    </Link>
+  ) : (
+    <span className={cls}>{body}</span>
   );
 }
 
@@ -51,22 +51,34 @@ function StatusBadge({ match }: { match: MatchView }) {
   if (match.status === "POSTPONED") {
     return <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">Adiada</span>;
   }
+  if (match.status === "CANCELED") {
+    return <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">Cancelada</span>;
+  }
   if (match.forfeit) {
     return <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">W.O.</span>;
   }
   return null;
 }
 
-export function MatchRow({ match }: { match: MatchView }) {
+/**
+ * Linha de partida. `context` controla o cabeçalho: "full" mostra campeonato e fase;
+ * "stage" (dentro da página do campeonato) mostra só a data.
+ */
+export function MatchRow({ match, showDate = false, context = "full" }: { match: MatchView; showDate?: boolean; context?: "full" | "stage" }) {
   return (
     <li className="border-b border-line px-4 py-3 last:border-b-0">
       <div className="mb-2 flex items-center gap-2 text-xs text-muted">
         <StatusBadge match={match} />
-        <span className="truncate">
-          {match.tournament} · {match.stage}
-        </span>
+        {showDate && match.scheduledAt ? (
+          <span className="shrink-0">{formatDayMonth(match.scheduledAt)}</span>
+        ) : null}
+        {context === "full" ? (
+          <Link href={`/campeonatos/${match.tournamentSlug}`} className="truncate hover:text-text">
+            {match.tournament} · {match.stage}
+          </Link>
+        ) : null}
         <span className="ml-auto shrink-0">
-          {match.tier !== "UNRANKED" ? `Tier ${match.tier} · ` : ""}MD{match.bestOf}
+          {context === "full" && match.tier !== "UNRANKED" ? `Tier ${match.tier} · ` : ""}MD{match.bestOf}
         </span>
       </div>
       <div className="flex items-center gap-3">
@@ -76,7 +88,7 @@ export function MatchRow({ match }: { match: MatchView }) {
         </span>
         <TeamName team={match.teamB} won={match.winner === "B"} align="right" />
       </div>
-      {match.streamUrl && match.status !== "FINISHED" ? (
+      {match.streamUrl && (match.status === "LIVE" || match.status === "SCHEDULED") ? (
         <a
           href={match.streamUrl}
           target="_blank"
@@ -87,5 +99,15 @@ export function MatchRow({ match }: { match: MatchView }) {
         </a>
       ) : null}
     </li>
+  );
+}
+
+export function MatchList({ matches, showDate, context }: { matches: MatchView[]; showDate?: boolean; context?: "full" | "stage" }) {
+  return (
+    <ul className="rounded-lg border border-line bg-surface">
+      {matches.map((m) => (
+        <MatchRow key={m.id} match={m} showDate={showDate} context={context} />
+      ))}
+    </ul>
   );
 }

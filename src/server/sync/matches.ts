@@ -1,22 +1,15 @@
 import type { PrismaClient } from "@/generated/prisma/client";
 import { fetchAllPages } from "@/server/pandascore/client";
-import { mapMatch, regionName, UnsupportedRecordError, type MatchInput, type TeamInput } from "@/server/pandascore/map";
+import { mapMatch, regionName, UnsupportedRecordError, type MatchInput } from "@/server/pandascore/map";
 import { psMatchSchema } from "@/server/pandascore/schemas";
+import { dedupeById, eachRecord, runWithLease, SOURCE, type SyncReport } from "./lease";
+import { teamIdByExternal, upsertTeam, type IdCache } from "./teams-store";
 
 /** Busca partidas cruas no provedor. `since` nulo = primeira carga. */
 export type MatchFetcher = (since: Date | null, now: Date) => Promise<unknown[]>;
 
-export type SyncReport =
-  | { status: "skipped"; reason: string }
-  | { status: "ok"; fetched: number; saved: number; failed: { id: unknown; reason: string }[]; since: Date | null };
-
-const SOURCE = "PANDASCORE" as const;
-/** Sobreposição entre janelas, para não perder registros alterados durante a execução anterior. */
-const OVERLAP_MS = 5 * 60_000;
 /** Primeira carga: resultados deste período para trás. */
 const INITIAL_PAST_DAYS = 30;
-/** Execução travada há mais tempo que isso é considerada morta e pode ser assumida. */
-const LEASE_MS = 10 * 60_000;
 
 const iso = (d: Date) => d.toISOString().replace(/\.\d{3}Z$/, "Z");
 
@@ -48,61 +41,6 @@ export function pandaScoreFetcher(token: string): MatchFetcher {
     batches.push(await fetchAllPages("/valorant/matches/running", {}, token, 2));
     return batches.flat();
   };
-}
-
-/** Garante que só uma execução rode por vez. Devolve a data do último sucesso, ou `false` se já há outra rodando. */
-async function acquireLease(db: PrismaClient, now: Date): Promise<{ lastSuccessAt: Date | null } | false> {
-  await db.syncState.upsert({
-    where: { source_resource: { source: SOURCE, resource: "MATCHES" } },
-    create: { source: SOURCE, resource: "MATCHES" },
-    update: {},
-  });
-  const staleBefore = new Date(now.getTime() - LEASE_MS);
-  const rows = await db.$queryRaw<{ last_success_at: Date | null }[]>`
-    UPDATE "sync_state" SET "last_started_at" = ${now}
-    WHERE "source" = 'PANDASCORE' AND "resource" = 'MATCHES'
-      AND (
-        "last_started_at" IS NULL
-        OR ("last_finished_at" IS NOT NULL AND "last_finished_at" >= "last_started_at")
-        OR "last_started_at" < ${staleBefore}
-      )
-    RETURNING "last_success_at"`;
-  return rows.length === 1 ? { lastSuccessAt: rows[0].last_success_at } : false;
-}
-
-/** Cache de ids internos por execução: o mesmo time aparece em várias partidas. */
-type IdCache = Map<string, string>;
-
-async function upsertTeam(db: PrismaClient, team: TeamInput, cache: IdCache): Promise<string> {
-  const key = `team:${team.externalId}`;
-  const cached = cache.get(key);
-  if (cached) return cached;
-  const data = {
-    slug: team.slug,
-    name: team.name,
-    acronym: team.acronym,
-    countryCode: team.countryCode,
-    logoUrl: team.logoUrl,
-  };
-  const row = await db.team.upsert({
-    where: { source_externalId: { source: SOURCE, externalId: team.externalId } },
-    create: { source: SOURCE, externalId: team.externalId, ...data },
-    update: data,
-    select: { id: true },
-  });
-  cache.set(key, row.id);
-  return row.id;
-}
-
-async function teamIdByExternal(db: PrismaClient, externalId: string | null, cache: IdCache) {
-  if (!externalId) return null;
-  const cached = cache.get(`team:${externalId}`);
-  if (cached) return cached;
-  const row = await db.team.findUnique({
-    where: { source_externalId: { source: SOURCE, externalId } },
-    select: { id: true },
-  });
-  return row?.id ?? null;
 }
 
 async function saveMatch(db: PrismaClient, input: MatchInput, cache: IdCache) {
@@ -239,75 +177,26 @@ async function saveMatch(db: PrismaClient, input: MatchInput, cache: IdCache) {
   });
 }
 
-function describe(err: unknown): string {
-  if (err instanceof UnsupportedRecordError) return err.message;
-  if (err instanceof Error) return `${err.name}: ${err.message.split("\n").at(-1)?.slice(0, 300)}`;
-  return String(err);
-}
-
 /**
  * Sincroniza partidas do provedor para o banco. Idempotente: rodar duas vezes com os mesmos
  * dados não muda nada. Um registro inválido não derruba os demais; vai para o relatório.
  */
-export async function syncMatches(
+export function syncMatches(
   db: PrismaClient,
   fetchMatches: MatchFetcher,
   now: Date = new Date(),
 ): Promise<SyncReport> {
-  // Tudo no mesmo relógio (`now`): o lease compara início e fim da execução.
-  const t0 = Date.now();
-  const finishedAt = () => new Date(now.getTime() + (Date.now() - t0));
-
-  const lease = await acquireLease(db, now);
-  if (!lease) return { status: "skipped", reason: "outra sincronização em andamento" };
-
-  const where = { source_resource: { source: SOURCE, resource: "MATCHES" as const } };
-  const since = lease.lastSuccessAt ? new Date(lease.lastSuccessAt.getTime() - OVERLAP_MS) : null;
-
-  try {
+  return runWithLease(db, "MATCHES", now, async (since) => {
     const raw = await fetchMatches(since, now);
-
-    // A mesma partida pode vir em duas listas; a última ocorrência prevalece.
-    const byId = new Map<unknown, unknown>();
-    for (const item of raw) {
-      byId.set((item as { id?: unknown })?.id, item);
-    }
-
     const cache: IdCache = new Map();
-    const failed: { id: unknown; reason: string }[] = [];
-    let saved = 0;
-
-    for (const [id, item] of byId) {
-      try {
-        const parsed = psMatchSchema.safeParse(item);
-        if (!parsed.success) {
-          const issue = parsed.error.issues[0];
-          throw new UnsupportedRecordError(`partida ${String(id)}: ${issue.path.join(".")} ${issue.message}`);
-        }
-        await saveMatch(db, mapMatch(parsed.data), cache);
-        saved++;
-      } catch (err) {
-        failed.push({ id, reason: describe(err) });
+    return eachRecord(dedupeById(raw), async (item) => {
+      const parsed = psMatchSchema.safeParse(item);
+      if (!parsed.success) {
+        const issue = parsed.error.issues[0];
+        const id = (item as { id?: unknown })?.id;
+        throw new UnsupportedRecordError(`partida ${String(id)}: ${issue.path.join(".")} ${issue.message}`);
       }
-    }
-
-    await db.syncState.update({
-      where,
-      data: {
-        lastSuccessAt: now,
-        lastFinishedAt: finishedAt(),
-        lastError: failed.length
-          ? `${failed.length} partida(s) ignorada(s). Primeira: ${failed[0].reason}`
-          : null,
-      },
+      await saveMatch(db, mapMatch(parsed.data), cache);
     });
-
-    return { status: "ok", fetched: byId.size, saved, failed, since };
-  } catch (err) {
-    await db.syncState.update({
-      where,
-      data: { lastFinishedAt: finishedAt(), lastError: describe(err) },
-    });
-    throw err;
-  }
+  });
 }

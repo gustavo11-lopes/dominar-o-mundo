@@ -75,5 +75,32 @@ export const psMatchSchema = z.object({
   tournament: psTournamentSchema,
 });
 
+export const psPlayerSchema = z.object({
+  id,
+  name: z.string().min(1),
+  slug: z.string().min(1).nullable(),
+  active: z.boolean(),
+  first_name: z.string().nullable(),
+  last_name: z.string().nullable(),
+  nationality: z.string().nullable(),
+  image_url: z.url().nullable(),
+});
+
+/** Time com o elenco atual, como vem em /valorant/teams. */
+export const psTeamWithPlayersSchema = psTeamSchema.extend({ players: z.array(psPlayerSchema) });
+
+/** Linha de /tournaments/{id}/standings. Chaves eliminatórias trazem só rank e time. */
+export const psStandingSchema = z.object({
+  rank: z.number().int().positive(),
+  team: psTeamSchema,
+  wins: z.number().int().nonnegative().optional(),
+  losses: z.number().int().nonnegative().optional(),
+  game_wins: z.number().int().nonnegative().optional(),
+  game_losses: z.number().int().nonnegative().optional(),
+});
+
+export type PsPlayer = z.infer<typeof psPlayerSchema>;
+export type PsTeamWithPlayers = z.infer<typeof psTeamWithPlayersSchema>;
+export type PsStanding = z.infer<typeof psStandingSchema>;
 export type PsTeam = z.infer<typeof psTeamSchema>;
 export type PsMatch = z.infer<typeof psMatchSchema>;
