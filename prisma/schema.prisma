@@ -1,0 +1,278 @@
+// Núcleo competitivo: regiões, times, jogadores, campeonatos e partidas.
+// Notícias e rankings entram em migrações próprias, quando a fonte de cada um estiver definida.
+//
+// Convenções:
+// - id: UUIDv7 gerado pela aplicação (Prisma); é o id público.
+// - (source, externalId): identifica o registro no provedor de dados e é a chave do upsert do sync.
+// - Datas sempre timestamptz, em UTC. Conversão de fuso é da interface.
+// - Coluna opcional só quando a ausência tem significado (ex.: adversário ainda indefinido).
+// - CHECKs e o índice parcial de PlayerTeamStint ficam no SQL da migração (o Prisma não os descreve).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum DataSource {
+  PANDASCORE
+}
+
+enum Tier {
+  S
+  A
+  B
+  C
+  D
+  UNRANKED
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  CANCELED
+  POSTPONED
+}
+
+enum MapStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  NOT_PLAYED
+}
+
+enum SyncResource {
+  MATCHES
+}
+
+/// Região como o provedor classifica cada fase (ex.: "SA", "WEU", "ASIA"). Criada pelo sync.
+model Region {
+  id   String @id @default(uuid(7)) @db.Uuid
+  code String @unique
+  name String
+
+  stages Stage[]
+
+  @@map("region")
+}
+
+model Team {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  source      DataSource
+  externalId  String     @map("external_id")
+  slug        String     @unique
+  name        String
+  /// Sigla (ex.: "LOUD"). Nem todo time tem no provedor.
+  acronym     String?
+  /// ISO 3166-1 alpha-2. Nulo quando o provedor não informa.
+  countryCode String?    @map("country_code") @db.Char(2)
+  logoUrl     String?    @map("logo_url")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  stints     PlayerTeamStint[]
+  matchesAsA Match[]           @relation("MatchTeamA")
+  matchesAsB Match[]           @relation("MatchTeamB")
+  matchesWon Match[]           @relation("MatchWinner")
+  mapsWon    MatchMap[]
+  stagesWon  Stage[]
+
+  @@unique([source, externalId])
+  @@index([name])
+  @@map("team")
+}
+
+model Player {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  source      DataSource
+  externalId  String     @map("external_id")
+  slug        String     @unique
+  /// Nickname competitivo.
+  handle      String
+  firstName   String?    @map("first_name")
+  lastName    String?    @map("last_name")
+  countryCode String?    @map("country_code") @db.Char(2)
+  imageUrl    String?    @map("image_url")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  stints PlayerTeamStint[]
+
+  @@unique([source, externalId])
+  @@index([handle])
+  @@map("player")
+}
+
+/// Passagem de um jogador por um time. O time atual é a passagem com endedAt nulo
+/// (no máximo uma por jogador, garantido por índice parcial único na migração).
+model PlayerTeamStint {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  playerId  String    @map("player_id") @db.Uuid
+  teamId    String    @map("team_id") @db.Uuid
+  /// Início conhecido. Quando o provedor não informa a data real, é a data em que o sync viu o jogador no elenco.
+  startedAt DateTime  @map("started_at") @db.Timestamptz(3)
+  /// Nulo = passagem em andamento.
+  endedAt   DateTime? @map("ended_at") @db.Timestamptz(3)
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Restrict)
+
+  @@index([playerId])
+  @@index([teamId, endedAt])
+  @@map("player_team_stint")
+}
+
+/// Circuito recorrente (ex.: VCT Americas). Agrupa edições ao longo dos anos.
+model League {
+  id         String     @id @default(uuid(7)) @db.Uuid
+  source     DataSource
+  externalId String     @map("external_id")
+  slug       String     @unique
+  name       String
+  imageUrl   String?    @map("image_url")
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  tournaments Tournament[]
+
+  @@unique([source, externalId])
+  @@map("league")
+}
+
+/// Uma edição de um circuito (ex.: VCT Americas 2026 Stage 2). É o "campeonato" que o usuário vê.
+model Tournament {
+  id         String     @id @default(uuid(7)) @db.Uuid
+  source     DataSource
+  externalId String     @map("external_id")
+  leagueId   String     @map("league_id") @db.Uuid
+  slug       String     @unique
+  name       String
+  /// Datas nulas enquanto o organizador não confirma.
+  beginAt    DateTime?  @map("begin_at") @db.Timestamptz(3)
+  endAt      DateTime?  @map("end_at") @db.Timestamptz(3)
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  league League  @relation(fields: [leagueId], references: [id], onDelete: Restrict)
+  stages Stage[]
+
+  @@unique([source, externalId])
+  @@index([leagueId, beginAt])
+  @@index([beginAt])
+  @@map("tournament")
+}
+
+/// Fase de um campeonato (grupos, playoffs, final). É onde o provedor registra tier, região, premiação e campeão.
+model Stage {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  source       DataSource
+  externalId   String     @map("external_id")
+  tournamentId String     @map("tournament_id") @db.Uuid
+  slug         String     @unique
+  name         String
+  tier         Tier       @default(UNRANKED)
+  beginAt      DateTime?  @map("begin_at") @db.Timestamptz(3)
+  endAt        DateTime?  @map("end_at") @db.Timestamptz(3)
+  /// Premiação como o provedor publica (texto livre, ex.: "200000 Thai Baht"). Nula quando não divulgada.
+  prizePool    String?    @map("prize_pool")
+  /// Nula quando o provedor não classifica a fase.
+  regionId     String?    @map("region_id") @db.Uuid
+  /// Nulo até a fase terminar.
+  winnerTeamId String?    @map("winner_team_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Restrict)
+  region     Region?    @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  winner     Team?      @relation(fields: [winnerTeamId], references: [id], onDelete: Restrict)
+  matches    Match[]
+
+  @@unique([source, externalId])
+  @@index([tournamentId, beginAt])
+  @@index([winnerTeamId])
+  @@index([regionId])
+  @@map("stage")
+}
+
+/// Série (MD1, MD3, MD5) entre dois times. scoreA/scoreB contam mapas vencidos.
+model Match {
+  id           String      @id @default(uuid(7)) @db.Uuid
+  source       DataSource
+  externalId   String      @map("external_id")
+  stageId      String      @map("stage_id") @db.Uuid
+  name         String
+  status       MatchStatus @default(SCHEDULED)
+  /// Nulo quando a data ainda não foi anunciada.
+  scheduledAt  DateTime?   @map("scheduled_at") @db.Timestamptz(3)
+  beginAt      DateTime?   @map("begin_at") @db.Timestamptz(3)
+  endAt        DateTime?   @map("end_at") @db.Timestamptz(3)
+  bestOf       Int         @map("best_of") @db.SmallInt
+  /// Times nulos em confrontos de chave ainda indefinidos.
+  teamAId      String?     @map("team_a_id") @db.Uuid
+  teamBId      String?     @map("team_b_id") @db.Uuid
+  scoreA       Int         @default(0) @map("score_a") @db.SmallInt
+  scoreB       Int         @default(0) @map("score_b") @db.SmallInt
+  /// Nulo até a série terminar.
+  winnerTeamId String?     @map("winner_team_id") @db.Uuid
+  forfeit      Boolean     @default(false)
+  streamUrl    String?     @map("stream_url")
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  stage  Stage      @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  teamA  Team?      @relation("MatchTeamA", fields: [teamAId], references: [id], onDelete: Restrict)
+  teamB  Team?      @relation("MatchTeamB", fields: [teamBId], references: [id], onDelete: Restrict)
+  winner Team?      @relation("MatchWinner", fields: [winnerTeamId], references: [id], onDelete: Restrict)
+  maps   MatchMap[]
+
+  @@unique([source, externalId])
+  @@index([status, scheduledAt])
+  @@index([stageId, scheduledAt])
+  @@index([teamAId, scheduledAt])
+  @@index([teamBId, scheduledAt])
+  @@index([winnerTeamId])
+  @@map("match")
+}
+
+/// Um mapa dentro da série. O plano gratuito do provedor informa ordem, status e vencedor;
+/// nome do mapa e placar de rounds não vêm, então não há coluna para eles.
+model MatchMap {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  source       DataSource
+  externalId   String     @map("external_id")
+  matchId      String     @map("match_id") @db.Uuid
+  /// Ordem do mapa na série, começando em 1.
+  position     Int        @db.SmallInt
+  status       MapStatus  @default(SCHEDULED)
+  winnerTeamId String?    @map("winner_team_id") @db.Uuid
+  beginAt      DateTime?  @map("begin_at") @db.Timestamptz(3)
+  endAt        DateTime?  @map("end_at") @db.Timestamptz(3)
+
+  match  Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  winner Team? @relation(fields: [winnerTeamId], references: [id], onDelete: Restrict)
+
+  @@unique([source, externalId])
+  @@unique([matchId, position])
+  @@index([winnerTeamId])
+  @@map("match_map")
+}
+
+/// Estado da sincronização por recurso. Alimenta o "atualizado há X min" e evita execuções sobrepostas.
+model SyncState {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  source         DataSource
+  resource       SyncResource
+  /// Nulos até a primeira execução.
+  lastStartedAt  DateTime?    @map("last_started_at") @db.Timestamptz(3)
+  lastFinishedAt DateTime?    @map("last_finished_at") @db.Timestamptz(3)
+  lastSuccessAt  DateTime?    @map("last_success_at") @db.Timestamptz(3)
+  /// Mensagem do último erro; limpa a cada sucesso.
+  lastError      String?      @map("last_error")
+
+  @@unique([source, resource])
+  @@map("sync_state")
+}

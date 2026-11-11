@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    // Logos de times e ligas servidos pela CDN da PandaScore.
+    remotePatterns: [{ protocol: "https", hostname: "cdn-api.pandascore.co", pathname: "/images/**" }],
+  },
   turbopack: {
     rules: {
       "*.css": {
