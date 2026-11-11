@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["gru1"],
+  "schedules": {
+    "sync": {
+      "schedule": "*/15 * * * *",
+      "path": "/api/sync",
+      "requestMethod": "GET"
+    }
+  }
+}

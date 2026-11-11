@@ -12,7 +12,7 @@ const url = process.env.TEST_DATABASE_URL;
 
 describe.skipIf(!url)("syncTeams e syncStandings (Postgres)", () => {
   const db = new PrismaClient({
-    adapter: new PrismaPg({ connectionString: url!, options: "-c TimeZone=UTC" }),
+    adapter: new PrismaPg({ connectionString: url! }),
   });
   // Relógio real: a seleção de fases compara com o updatedAt que o banco grava agora.
   const T0 = new Date();

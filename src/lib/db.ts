@@ -6,9 +6,9 @@ function createClient() {
   if (!connectionString) {
     throw new Error("DATABASE_URL não está definida.");
   }
-  // O adapter envia datas como horário UTC sem fuso; a sessão precisa estar em UTC
-  // ou o Postgres desloca os valores pelo fuso do servidor.
-  const adapter = new PrismaPg({ connectionString, options: "-c TimeZone=UTC" });
+  // O fuso UTC é configurado no próprio banco (migração banco_em_utc), não na conexão:
+  // o pooler da Neon não aceita parâmetros de sessão na abertura.
+  const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({ adapter });
 }
 

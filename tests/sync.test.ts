@@ -11,7 +11,7 @@ const url = process.env.TEST_DATABASE_URL;
 
 describe.skipIf(!url)("syncMatches (Postgres)", () => {
   const db = new PrismaClient({
-    adapter: new PrismaPg({ connectionString: url!, options: "-c TimeZone=UTC" }),
+    adapter: new PrismaPg({ connectionString: url! }),
   });
   const all = [...past, ...upcoming];
   const fixed = (items: unknown[]): MatchFetcher => async () => structuredClone(items);
