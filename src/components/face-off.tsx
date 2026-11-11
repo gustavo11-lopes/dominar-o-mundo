@@ -5,7 +5,7 @@ import type { MatchView, TeamView } from "@/server/queries/matches";
 import { AutoRefresh, Score } from "./live-client";
 import { StreamEmbed } from "./stream-embed";
 import { Tilt } from "./tilt";
-import { initials } from "./ui";
+import { initials } from "@/lib/initials";
 
 /** Camada que se desloca com o ponteiro (definido pelo Tilt) na proporção de `depth`. */
 const layer = (depth: number): React.CSSProperties => ({

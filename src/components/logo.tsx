@@ -2,17 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-
-/** Iniciais para avatar: "KeepBest Gaming" -> "KG", "sibeastw0w" -> "SI". */
-export function initials(name: string) {
-  const words = name
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  const raw = words.length > 1 ? words[0][0] + words[1][0] : (words[0] ?? "?").slice(0, 2);
-  return raw.toUpperCase();
-}
+import { initials } from "@/lib/initials";
 
 /** Cor própria e estável para cada nome (o mesmo time tem sempre a mesma cor). */
 function hueOf(name: string) {

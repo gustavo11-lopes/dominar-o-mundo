@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ViewTransition } from "react";
 import { countryName } from "@/lib/format";
 import { Flag } from "./flag";
-export { initials, Logo } from "./logo";
+export { Logo } from "./logo";
+export { initials } from "@/lib/initials";
 
 export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
