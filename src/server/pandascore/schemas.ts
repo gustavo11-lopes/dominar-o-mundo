@@ -40,6 +40,7 @@ export const psTournamentSchema = z.object({
   end_at: isoDate.nullable(),
   tier: z.string().nullable(),
   region: z.string().nullable(),
+  country: z.string().nullable().optional(),
   prizepool: z.string().nullable(),
   winner_id: id.nullable(),
   winner_type: z.string().nullable(),

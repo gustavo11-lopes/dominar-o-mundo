@@ -1,1 +1,476 @@
-[{"tournament":{"id":22424,"name":"Playoffs","type":"online/offline","country":"ID","begin_at":"2026-11-10T12:00:00Z","detailed_stats":true,"end_at":"2026-11-21T23:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-indonesia-2027-playoffs","region":"ASIA","serie_id":11194,"modified_at":"2026-11-10T16:55:46Z","league_id":4860,"prizepool":"102,000,000 Indonesian Rupiah","tier":"d","has_bracket":true,"live_supported":false},"serie_id":11194,"live":{"supported":false,"url":null,"opens_at":null},"winner":null,"detailed_stats":true,"opponents":[{"type":"Team","opponent":{"id":139558,"name":"GAS Esports","location":"ID","slug":"gas-esports","modified_at":"2026-11-08T18:27:03Z","acronym":"GAS","image_url":"https://cdn-api.pandascore.co/images/team/image/139558/800px_logo_gas_esports.png","dark_mode_image_url":"https://cdn-api.pandascore.co/dark_images/team/dark_image/139558/800px_logo_gas_esports.png"}},{"type":"Team","opponent":{"id":139561,"name":"Surprise","location":"ID","slug":"surprise","modified_at":"2026-11-10T13:11:27Z","acronym":"SUR","image_url":"https://cdn-api.pandascore.co/images/team/image/139561/surprise_lightmode.png","dark_mode_image_url":"https://cdn-api.pandascore.co/dark_images/team/dark_image/139561/surprise_darkmode.png"}}],"slug":"2026-11-11-8b138948-ea06-4de5-b344-47726de9f485","begin_at":"2026-11-11T12:00:00Z","videogame_title":null,"number_of_games":3,"status":"not_started","draw":false,"streams_list":[{"main":true,"language":"id","embed_url":null,"official":true,"raw_url":"https://www.youtube.com/@PredatorGamingIndonesia/live"}],"tournament_id":22424,"league":{"id":4860,"name":"Asia Pacific Predator League","url":null,"slug":"valorant-predator-league","modified_at":"2024-01-06T09:08:33Z","image_url":"https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"},"scheduled_at":"2026-11-11T12:00:00Z","winner_id":null,"end_at":null,"id":1804305,"name":"Lower Bracket Round 1 Match 1: GAS vs SUR","results":[{"score":0,"team_id":139558},{"score":0,"team_id":139561}],"videogame":{"id":26,"name":"Valorant","slug":"valorant"},"game_advantage":null,"serie":{"id":11194,"name":"Indonesia","year":2027,"begin_at":"2026-11-10T12:00:00Z","end_at":"2026-11-21T23:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-indonesia-2027","modified_at":"2026-11-08T18:11:01Z","league_id":4860,"season":null,"full_name":"Indonesia 2027"},"games":[{"complete":false,"id":52937,"position":1,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1804305,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52938,"position":2,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1804305,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52939,"position":3,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1804305,"winner_type":"Team","winner":{"id":null,"type":"Team"}}],"videogame_version":null,"forfeit":false,"rescheduled":false,"original_scheduled_at":"2026-11-11T12:00:00Z","modified_at":"2026-11-11T06:00:26Z","match_type":"best_of","league_id":4860,"winner_type":"Team"},{"tournament":{"id":22428,"name":"Playoffs","type":"online/offline","country":"TH","begin_at":"2026-11-10T12:00:00Z","detailed_stats":true,"end_at":"2026-11-18T17:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-thailand-2027-playoffs","region":"ASIA","serie_id":11197,"modified_at":"2026-11-10T14:37:41Z","league_id":4860,"prizepool":"200000 Thai Baht","tier":"d","has_bracket":true,"live_supported":false},"serie_id":11197,"live":{"supported":false,"url":null,"opens_at":null},"winner":null,"detailed_stats":true,"opponents":[{"type":"Team","opponent":{"id":139574,"name":"OneOPae","location":"TH","slug":"oneopae","modified_at":"2026-11-10T13:33:14Z","acronym":null,"image_url":null,"dark_mode_image_url":null}},{"type":"Team","opponent":{"id":139570,"name":"NongKaiTod","location":"TH","slug":"nongkaitod","modified_at":"2026-11-10T13:37:21Z","acronym":null,"image_url":null,"dark_mode_image_url":null}}],"slug":"oneopae-2026-11-11","begin_at":"2026-11-11T12:00:00Z","videogame_title":null,"number_of_games":3,"status":"not_started","draw":false,"streams_list":[{"main":true,"language":"th","embed_url":null,"official":true,"raw_url":"https://www.youtube.com/@PredatorLeagueThailand/live"}],"tournament_id":22428,"league":{"id":4860,"name":"Asia Pacific Predator League","url":null,"slug":"valorant-predator-league","modified_at":"2024-01-06T09:08:33Z","image_url":"https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"},"scheduled_at":"2026-11-11T12:00:00Z","winner_id":null,"end_at":null,"id":1802915,"name":"Lower Bracket Round 1 match 2: OneOPae vs NongKaiTod","results":[{"score":0,"team_id":139574},{"score":0,"team_id":139570}],"videogame":{"id":26,"name":"Valorant","slug":"valorant"},"game_advantage":null,"serie":{"id":11197,"name":"Thailand","year":2027,"begin_at":"2026-11-10T09:00:00Z","end_at":"2026-11-18T22:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-thailand-2027","modified_at":"2026-11-09T22:36:31Z","league_id":4860,"season":null,"full_name":"Thailand 2027"},"games":[{"complete":false,"id":52902,"position":1,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802915,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52903,"position":2,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802915,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52904,"position":3,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802915,"winner_type":"Team","winner":{"id":null,"type":"Team"}}],"videogame_version":null,"forfeit":false,"rescheduled":false,"original_scheduled_at":"2026-11-11T12:00:00Z","modified_at":"2026-11-11T06:00:00Z","match_type":"best_of","league_id":4860,"winner_type":"Team"},{"tournament":{"id":22428,"name":"Playoffs","type":"online/offline","country":"TH","begin_at":"2026-11-10T12:00:00Z","detailed_stats":true,"end_at":"2026-11-18T17:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-thailand-2027-playoffs","region":"ASIA","serie_id":11197,"modified_at":"2026-11-10T14:37:41Z","league_id":4860,"prizepool":"200000 Thai Baht","tier":"d","has_bracket":true,"live_supported":false},"serie_id":11197,"live":{"supported":false,"url":null,"opens_at":null},"winner":null,"detailed_stats":true,"opponents":[{"type":"Team","opponent":{"id":139572,"name":"1DAY24","location":"TH","slug":"1day24","modified_at":"2026-11-10T13:43:23Z","acronym":null,"image_url":null,"dark_mode_image_url":null}},{"type":"Team","opponent":{"id":139571,"name":"GODX","location":"TH","slug":"godx","modified_at":"2026-11-10T13:45:44Z","acronym":null,"image_url":null,"dark_mode_image_url":null}}],"slug":"1day24-2026-11-11","begin_at":"2026-11-11T12:00:00Z","videogame_title":null,"number_of_games":3,"status":"not_started","draw":false,"streams_list":[{"main":true,"language":"th","embed_url":null,"official":true,"raw_url":"https://www.youtube.com/@PredatorLeagueThailand/live"}],"tournament_id":22428,"league":{"id":4860,"name":"Asia Pacific Predator League","url":null,"slug":"valorant-predator-league","modified_at":"2024-01-06T09:08:33Z","image_url":"https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"},"scheduled_at":"2026-11-11T12:00:00Z","winner_id":null,"end_at":null,"id":1802914,"name":"Lower Bracket Round 1 match 1: 1DAY24 vs GODX","results":[{"score":0,"team_id":139572},{"score":0,"team_id":139571}],"videogame":{"id":26,"name":"Valorant","slug":"valorant"},"game_advantage":null,"serie":{"id":11197,"name":"Thailand","year":2027,"begin_at":"2026-11-10T09:00:00Z","end_at":"2026-11-18T22:00:00Z","winner_id":null,"winner_type":"Team","slug":"valorant-predator-league-thailand-2027","modified_at":"2026-11-09T22:36:31Z","league_id":4860,"season":null,"full_name":"Thailand 2027"},"games":[{"complete":false,"id":52899,"position":1,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802914,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52900,"position":2,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802914,"winner_type":"Team","winner":{"id":null,"type":"Team"}},{"complete":false,"id":52901,"position":3,"status":"not_started","length":null,"finished":false,"begin_at":null,"detailed_stats":true,"end_at":null,"forfeit":false,"match_id":1802914,"winner_type":"Team","winner":{"id":null,"type":"Team"}}],"videogame_version":null,"forfeit":false,"rescheduled":false,"original_scheduled_at":"2026-11-11T12:00:00Z","modified_at":"2026-11-11T06:00:09Z","match_type":"best_of","league_id":4860,"winner_type":"Team"}]
+[
+  {
+    "tournament": {
+      "id": 22424,
+      "name": "Playoffs",
+      "type": "online/offline",
+      "country": "ID",
+      "begin_at": "2026-11-10T12:00:00Z",
+      "detailed_stats": true,
+      "end_at": "2026-11-21T23:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-indonesia-2027-playoffs",
+      "region": "ASIA",
+      "serie_id": 11194,
+      "modified_at": "2026-11-10T16:55:46Z",
+      "league_id": 4860,
+      "prizepool": "102,000,000 Indonesian Rupiah",
+      "tier": "d",
+      "has_bracket": true,
+      "live_supported": false
+    },
+    "serie_id": 11194,
+    "live": { "supported": false, "url": null, "opens_at": null },
+    "winner": null,
+    "detailed_stats": true,
+    "opponents": [
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139558,
+          "name": "GAS Esports",
+          "location": "ID",
+          "slug": "gas-esports",
+          "modified_at": "2026-11-08T18:27:03Z",
+          "acronym": "GAS",
+          "image_url": "https://cdn-api.pandascore.co/images/team/image/139558/800px_logo_gas_esports.png",
+          "dark_mode_image_url": "https://cdn-api.pandascore.co/dark_images/team/dark_image/139558/800px_logo_gas_esports.png"
+        }
+      },
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139561,
+          "name": "Surprise",
+          "location": "ID",
+          "slug": "surprise",
+          "modified_at": "2026-11-10T13:11:27Z",
+          "acronym": "SUR",
+          "image_url": "https://cdn-api.pandascore.co/images/team/image/139561/surprise_lightmode.png",
+          "dark_mode_image_url": "https://cdn-api.pandascore.co/dark_images/team/dark_image/139561/surprise_darkmode.png"
+        }
+      }
+    ],
+    "slug": "2026-11-11-8b138948-ea06-4de5-b344-47726de9f485",
+    "begin_at": "2026-11-11T12:00:00Z",
+    "videogame_title": null,
+    "number_of_games": 3,
+    "status": "not_started",
+    "draw": false,
+    "streams_list": [
+      {
+        "main": true,
+        "language": "id",
+        "embed_url": null,
+        "official": true,
+        "raw_url": "https://www.youtube.com/@PredatorGamingIndonesia/live"
+      }
+    ],
+    "tournament_id": 22424,
+    "league": {
+      "id": 4860,
+      "name": "Asia Pacific Predator League",
+      "url": null,
+      "slug": "valorant-predator-league",
+      "modified_at": "2024-01-06T09:08:33Z",
+      "image_url": "https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"
+    },
+    "scheduled_at": "2026-11-11T12:00:00Z",
+    "winner_id": null,
+    "end_at": null,
+    "id": 1804305,
+    "name": "Lower Bracket Round 1 Match 1: GAS vs SUR",
+    "results": [
+      { "score": 0, "team_id": 139558 },
+      { "score": 0, "team_id": 139561 }
+    ],
+    "videogame": { "id": 26, "name": "Valorant", "slug": "valorant" },
+    "game_advantage": null,
+    "serie": {
+      "id": 11194,
+      "name": "Indonesia",
+      "year": 2027,
+      "begin_at": "2026-11-10T12:00:00Z",
+      "end_at": "2026-11-21T23:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-indonesia-2027",
+      "modified_at": "2026-11-08T18:11:01Z",
+      "league_id": 4860,
+      "season": null,
+      "full_name": "Indonesia 2027"
+    },
+    "games": [
+      {
+        "complete": false,
+        "id": 52937,
+        "position": 1,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1804305,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52938,
+        "position": 2,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1804305,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52939,
+        "position": 3,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1804305,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      }
+    ],
+    "videogame_version": null,
+    "forfeit": false,
+    "rescheduled": false,
+    "original_scheduled_at": "2026-11-11T12:00:00Z",
+    "modified_at": "2026-11-11T06:00:26Z",
+    "match_type": "best_of",
+    "league_id": 4860,
+    "winner_type": "Team"
+  },
+  {
+    "tournament": {
+      "id": 22428,
+      "name": "Playoffs",
+      "type": "online/offline",
+      "country": "TH",
+      "begin_at": "2026-11-10T12:00:00Z",
+      "detailed_stats": true,
+      "end_at": "2026-11-18T17:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-thailand-2027-playoffs",
+      "region": "ASIA",
+      "serie_id": 11197,
+      "modified_at": "2026-11-10T14:37:41Z",
+      "league_id": 4860,
+      "prizepool": "200000 Thai Baht",
+      "tier": "d",
+      "has_bracket": true,
+      "live_supported": false
+    },
+    "serie_id": 11197,
+    "live": { "supported": false, "url": null, "opens_at": null },
+    "winner": null,
+    "detailed_stats": true,
+    "opponents": [
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139574,
+          "name": "OneOPae",
+          "location": "TH",
+          "slug": "oneopae",
+          "modified_at": "2026-11-10T13:33:14Z",
+          "acronym": null,
+          "image_url": null,
+          "dark_mode_image_url": null
+        }
+      },
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139570,
+          "name": "NongKaiTod",
+          "location": "TH",
+          "slug": "nongkaitod",
+          "modified_at": "2026-11-10T13:37:21Z",
+          "acronym": null,
+          "image_url": null,
+          "dark_mode_image_url": null
+        }
+      }
+    ],
+    "slug": "oneopae-2026-11-11",
+    "begin_at": "2026-11-11T12:00:00Z",
+    "videogame_title": null,
+    "number_of_games": 3,
+    "status": "not_started",
+    "draw": false,
+    "streams_list": [
+      {
+        "main": true,
+        "language": "th",
+        "embed_url": null,
+        "official": true,
+        "raw_url": "https://www.youtube.com/@PredatorLeagueThailand/live"
+      }
+    ],
+    "tournament_id": 22428,
+    "league": {
+      "id": 4860,
+      "name": "Asia Pacific Predator League",
+      "url": null,
+      "slug": "valorant-predator-league",
+      "modified_at": "2024-01-06T09:08:33Z",
+      "image_url": "https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"
+    },
+    "scheduled_at": "2026-11-11T12:00:00Z",
+    "winner_id": null,
+    "end_at": null,
+    "id": 1802915,
+    "name": "Lower Bracket Round 1 match 2: OneOPae vs NongKaiTod",
+    "results": [
+      { "score": 0, "team_id": 139574 },
+      { "score": 0, "team_id": 139570 }
+    ],
+    "videogame": { "id": 26, "name": "Valorant", "slug": "valorant" },
+    "game_advantage": null,
+    "serie": {
+      "id": 11197,
+      "name": "Thailand",
+      "year": 2027,
+      "begin_at": "2026-11-10T09:00:00Z",
+      "end_at": "2026-11-18T22:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-thailand-2027",
+      "modified_at": "2026-11-09T22:36:31Z",
+      "league_id": 4860,
+      "season": null,
+      "full_name": "Thailand 2027"
+    },
+    "games": [
+      {
+        "complete": false,
+        "id": 52902,
+        "position": 1,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802915,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52903,
+        "position": 2,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802915,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52904,
+        "position": 3,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802915,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      }
+    ],
+    "videogame_version": null,
+    "forfeit": false,
+    "rescheduled": false,
+    "original_scheduled_at": "2026-11-11T12:00:00Z",
+    "modified_at": "2026-11-11T06:00:00Z",
+    "match_type": "best_of",
+    "league_id": 4860,
+    "winner_type": "Team"
+  },
+  {
+    "tournament": {
+      "id": 22428,
+      "name": "Playoffs",
+      "type": "online/offline",
+      "country": "TH",
+      "begin_at": "2026-11-10T12:00:00Z",
+      "detailed_stats": true,
+      "end_at": "2026-11-18T17:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-thailand-2027-playoffs",
+      "region": "ASIA",
+      "serie_id": 11197,
+      "modified_at": "2026-11-10T14:37:41Z",
+      "league_id": 4860,
+      "prizepool": "200000 Thai Baht",
+      "tier": "d",
+      "has_bracket": true,
+      "live_supported": false
+    },
+    "serie_id": 11197,
+    "live": { "supported": false, "url": null, "opens_at": null },
+    "winner": null,
+    "detailed_stats": true,
+    "opponents": [
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139572,
+          "name": "1DAY24",
+          "location": "TH",
+          "slug": "1day24",
+          "modified_at": "2026-11-10T13:43:23Z",
+          "acronym": null,
+          "image_url": null,
+          "dark_mode_image_url": null
+        }
+      },
+      {
+        "type": "Team",
+        "opponent": {
+          "id": 139571,
+          "name": "GODX",
+          "location": "TH",
+          "slug": "godx",
+          "modified_at": "2026-11-10T13:45:44Z",
+          "acronym": null,
+          "image_url": null,
+          "dark_mode_image_url": null
+        }
+      }
+    ],
+    "slug": "1day24-2026-11-11",
+    "begin_at": "2026-11-11T12:00:00Z",
+    "videogame_title": null,
+    "number_of_games": 3,
+    "status": "not_started",
+    "draw": false,
+    "streams_list": [
+      {
+        "main": true,
+        "language": "th",
+        "embed_url": null,
+        "official": true,
+        "raw_url": "https://www.youtube.com/@PredatorLeagueThailand/live"
+      }
+    ],
+    "tournament_id": 22428,
+    "league": {
+      "id": 4860,
+      "name": "Asia Pacific Predator League",
+      "url": null,
+      "slug": "valorant-predator-league",
+      "modified_at": "2024-01-06T09:08:33Z",
+      "image_url": "https://cdn-api.pandascore.co/images/league/image/4860/asia_pacific_predator_league_2024_allmode-png"
+    },
+    "scheduled_at": "2026-11-11T12:00:00Z",
+    "winner_id": null,
+    "end_at": null,
+    "id": 1802914,
+    "name": "Lower Bracket Round 1 match 1: 1DAY24 vs GODX",
+    "results": [
+      { "score": 0, "team_id": 139572 },
+      { "score": 0, "team_id": 139571 }
+    ],
+    "videogame": { "id": 26, "name": "Valorant", "slug": "valorant" },
+    "game_advantage": null,
+    "serie": {
+      "id": 11197,
+      "name": "Thailand",
+      "year": 2027,
+      "begin_at": "2026-11-10T09:00:00Z",
+      "end_at": "2026-11-18T22:00:00Z",
+      "winner_id": null,
+      "winner_type": "Team",
+      "slug": "valorant-predator-league-thailand-2027",
+      "modified_at": "2026-11-09T22:36:31Z",
+      "league_id": 4860,
+      "season": null,
+      "full_name": "Thailand 2027"
+    },
+    "games": [
+      {
+        "complete": false,
+        "id": 52899,
+        "position": 1,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802914,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52900,
+        "position": 2,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802914,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      },
+      {
+        "complete": false,
+        "id": 52901,
+        "position": 3,
+        "status": "not_started",
+        "length": null,
+        "finished": false,
+        "begin_at": null,
+        "detailed_stats": true,
+        "end_at": null,
+        "forfeit": false,
+        "match_id": 1802914,
+        "winner_type": "Team",
+        "winner": { "id": null, "type": "Team" }
+      }
+    ],
+    "videogame_version": null,
+    "forfeit": false,
+    "rescheduled": false,
+    "original_scheduled_at": "2026-11-11T12:00:00Z",
+    "modified_at": "2026-11-11T06:00:09Z",
+    "match_type": "best_of",
+    "league_id": 4860,
+    "winner_type": "Team"
+  }
+]

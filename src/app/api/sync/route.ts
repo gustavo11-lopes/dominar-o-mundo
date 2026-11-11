@@ -1,5 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
+import { SyncResource } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { DATA_TAG } from "@/server/queries/tags";
 import { runAllSyncs } from "@/server/sync/run";
@@ -25,6 +26,14 @@ export async function GET(request: Request) {
   if (!token) {
     console.error("[sync] PANDASCORE_TOKEN ausente");
     return Response.json({ error: { code: "SYNC_NOT_CONFIGURED" } }, { status: 500 });
+  }
+
+  // ?recarregar=MATCHES,TEAMS refaz a primeira carga desses recursos (ex.: depois de um campo novo).
+  const reload = (new URL(request.url).searchParams.get("recarregar") ?? "")
+    .split(",")
+    .filter((r): r is SyncResource => (Object.values(SyncResource) as string[]).includes(r));
+  if (reload.length) {
+    await db.syncState.updateMany({ where: { resource: { in: reload } }, data: { lastSuccessAt: null } });
   }
 
   const results = await runAllSyncs(db, token);

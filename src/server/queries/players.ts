@@ -4,8 +4,6 @@ import { db } from "@/lib/db";
 import { matchSelect, teamSelect, toMatchView, toTeamView, type MatchView, type TeamView } from "./matches";
 import { DATA_TAG } from "./tags";
 
-export const PLAYERS_PAGE_SIZE = 48;
-
 export type PlayerCard = {
   slug: string;
   handle: string;
@@ -16,52 +14,6 @@ export type PlayerCard = {
 };
 
 const fullName = (first: string | null, last: string | null) => [first, last].filter(Boolean).join(" ") || null;
-
-/** Só jogadores com time atual: o catálogo do provedor tem muitos perfis antigos e vazios. */
-export async function getPlayerList(query: string, page: number): Promise<{ items: PlayerCard[]; hasNext: boolean }> {
-  "use cache";
-  cacheTag(DATA_TAG);
-  cacheLife("hours");
-
-  const rows = await db.player.findMany({
-    where: {
-      stints: { some: { endedAt: null } },
-      ...(query
-        ? {
-            OR: [
-              { handle: { contains: query, mode: "insensitive" } },
-              { firstName: { contains: query, mode: "insensitive" } },
-              { lastName: { contains: query, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-    },
-    orderBy: [{ handle: "asc" }, { id: "asc" }],
-    skip: (page - 1) * PLAYERS_PAGE_SIZE,
-    take: PLAYERS_PAGE_SIZE + 1,
-    select: {
-      slug: true,
-      handle: true,
-      firstName: true,
-      lastName: true,
-      countryCode: true,
-      imageUrl: true,
-      stints: { where: { endedAt: null }, take: 1, select: { team: { select: teamSelect } } },
-    },
-  });
-
-  return {
-    items: rows.slice(0, PLAYERS_PAGE_SIZE).map((p) => ({
-      slug: p.slug,
-      handle: p.handle,
-      fullName: fullName(p.firstName, p.lastName),
-      countryCode: p.countryCode,
-      imageUrl: p.imageUrl,
-      team: p.stints[0] ? toTeamView(p.stints[0].team) : null,
-    })),
-    hasNext: rows.length > PLAYERS_PAGE_SIZE,
-  };
-}
 
 export type PlayerDetail = PlayerCard & {
   history: { team: TeamView; startedAt: string; startObserved: boolean; endedAt: string | null }[];

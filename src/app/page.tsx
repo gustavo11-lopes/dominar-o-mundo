@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { TournamentEmblem } from "@/components/tournament-emblem";
 import { FaceOff } from "@/components/face-off";
 import { MatchList } from "@/components/match-row";
 import { Empty, ListSkeleton, Logo, Reveal, SkeletonExit } from "@/components/ui";
@@ -81,7 +82,13 @@ async function Home() {
                     href={`/campeonatos/${t.slug}`}
                     className="flex h-full flex-col gap-3 spot panel-link p-4 chamfer"
                   >
-                    <Logo src={t.leagueImageUrl} name={t.league} size={36} />
+                    <TournamentEmblem
+                      name={t.league}
+                      imageUrl={t.leagueImageUrl}
+                      countryCodes={t.countryCodes}
+                      regionCodes={t.regionCodes}
+                      size={36}
+                    />
                     <span className="display text-2xl uppercase">{t.name}</span>
                     <span className="mt-auto text-xs text-muted">
                       {formatRange(t.beginAt, t.endAt)}

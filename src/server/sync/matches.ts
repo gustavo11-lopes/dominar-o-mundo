@@ -107,6 +107,7 @@ async function saveMatch(db: PrismaClient, input: MatchInput, cache: IdCache) {
     const data = {
       tournamentId,
       regionId,
+      countryCode: stage.countryCode,
       slug: stage.slug,
       name: stage.name,
       tier: stage.tier,

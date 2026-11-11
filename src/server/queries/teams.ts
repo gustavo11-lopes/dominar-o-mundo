@@ -5,10 +5,6 @@ import { db } from "@/lib/db";
 import { matchSelect, toMatchView, type MatchView } from "./matches";
 import { DATA_TAG } from "./tags";
 
-export const TEAMS_PAGE_SIZE = 48;
-/** "Em atividade" = jogou ou tem jogo marcado nesta janela em torno de hoje. */
-const ACTIVE_WINDOW_MS = 30 * 86_400_000;
-
 export type TeamCard = {
   slug: string;
   name: string;
@@ -25,40 +21,6 @@ const cardSelect = {
   logoUrl: true,
   logoDarkUrl: true,
 } satisfies Prisma.TeamSelect;
-
-const toCard = ({ logoDarkUrl, logoUrl, ...t }: Prisma.TeamGetPayload<{ select: typeof cardSelect }>): TeamCard => ({
-  ...t,
-  logoUrl: logoDarkUrl ?? logoUrl,
-});
-
-/** Com busca: procura no catálogo inteiro. Sem busca: só times em atividade. */
-export async function getTeamList(query: string, page: number): Promise<{ items: TeamCard[]; hasNext: boolean }> {
-  "use cache";
-  cacheTag(DATA_TAG);
-  cacheLife("hours");
-
-  let where: Prisma.TeamWhereInput;
-  if (query) {
-    where = {
-      OR: [{ name: { contains: query, mode: "insensitive" } }, { acronym: { contains: query, mode: "insensitive" } }],
-    };
-  } else {
-    const now = Date.now();
-    const window = {
-      scheduledAt: { gte: new Date(now - ACTIVE_WINDOW_MS), lte: new Date(now + ACTIVE_WINDOW_MS) },
-    };
-    where = { OR: [{ matchesAsA: { some: window } }, { matchesAsB: { some: window } }] };
-  }
-
-  const rows = await db.team.findMany({
-    where,
-    orderBy: [{ name: "asc" }, { id: "asc" }],
-    skip: (page - 1) * TEAMS_PAGE_SIZE,
-    take: TEAMS_PAGE_SIZE + 1,
-    select: cardSelect,
-  });
-  return { items: rows.slice(0, TEAMS_PAGE_SIZE).map(toCard), hasNext: rows.length > TEAMS_PAGE_SIZE };
-}
 
 export type RosterEntry = {
   slug: string;

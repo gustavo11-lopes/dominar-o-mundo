@@ -16,6 +16,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
+    "country-flag-icons": "^1.6.20",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",

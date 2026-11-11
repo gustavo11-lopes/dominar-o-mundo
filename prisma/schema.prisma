@@ -188,6 +188,8 @@ model Stage {
   endAt        DateTime?  @map("end_at") @db.Timestamptz(3)
   /// Premiação como o provedor publica (texto livre, ex.: "200000 Thai Baht"). Nula quando não divulgada.
   prizePool    String?    @map("prize_pool")
+  /// País-sede informado pelo provedor (ISO 3166-1 alpha-2). Nulo para online/internacional ou não informado.
+  countryCode  String?    @map("country_code") @db.Char(2)
   /// Nula quando o provedor não classifica a fase.
   regionId     String?    @map("region_id") @db.Uuid
   /// Nulo até a fase terminar.

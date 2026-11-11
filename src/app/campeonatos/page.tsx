@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { TournamentEmblem } from "@/components/tournament-emblem";
 import {
   Empty,
   firstParam,
   ListSkeleton,
-  Logo,
   PageTitle,
   Pagination,
   parsePage,
@@ -58,7 +58,13 @@ async function Tournaments({ searchParams }: { searchParams: SearchParams }) {
           {items.map((t) => (
             <li key={t.slug}>
               <Link href={`/campeonatos/${t.slug}`} className="flex h-full gap-3 spot panel-link p-4">
-                <Logo src={t.leagueImageUrl} name={t.league} size={40} />
+                <TournamentEmblem
+                  name={t.league}
+                  imageUrl={t.leagueImageUrl}
+                  countryCodes={t.countryCodes}
+                  regionCodes={t.regionCodes}
+                  size={40}
+                />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{t.name}</span>
                   <span className="block truncate text-xs text-muted">{t.league}</span>

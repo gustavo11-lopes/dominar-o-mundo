@@ -61,10 +61,5 @@ export function countryName(code: string) {
   }
 }
 
-/** Emoji de bandeira a partir do código ISO de 2 letras. */
-export function flag(code: string) {
-  return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
-}
-
 const dayMonth = new Intl.DateTimeFormat("pt-BR", { timeZone: SITE_TIME_ZONE, day: "2-digit", month: "2-digit" });
 export const formatDayMonth = (iso: string) => dayMonth.format(new Date(iso));

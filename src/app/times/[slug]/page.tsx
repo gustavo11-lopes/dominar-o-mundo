@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MatchList } from "@/components/match-row";
 import { Country, Empty, ListSkeleton, Logo, Reveal, SkeletonExit, Morph } from "@/components/ui";
+import { Flag } from "@/components/flag";
 import { HeroHeader, Stat } from "@/components/hero-header";
 import { getBackdrops, pickBackdrop } from "@/server/queries/maps";
 import { getTeam, type RosterEntry } from "@/server/queries/teams";
@@ -43,7 +44,7 @@ async function TeamContent({ params }: { params: Params }) {
         backdrop={pickBackdrop(team.slug, backdrops)}
         emblem={
           <Morph name={`team-${team.slug}`}>
-            <Logo src={team.logoUrl} name={team.name} size={112} />
+            <Logo src={team.logoUrl} name={team.name} size={112} badge={<Flag code={team.countryCode} height={18} />} />
           </Morph>
         }
         title={team.name}

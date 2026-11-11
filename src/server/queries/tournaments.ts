@@ -18,6 +18,10 @@ export type TournamentCard = {
   /** Maior tier entre as fases. */
   tier: Tier;
   regions: string[];
+  /** Códigos de região das fases (ex.: "SA", "WEU"), como o provedor informa. */
+  regionCodes: string[];
+  /** Países-sede informados pelo provedor. */
+  countryCodes: string[];
   /** Premiação como publicada pelo provedor, de cada fase que divulgou. */
   prizePools: string[];
 };
@@ -30,7 +34,9 @@ const cardSelect = {
   beginAt: true,
   endAt: true,
   league: { select: { name: true, imageUrl: true } },
-  stages: { select: { tier: true, prizePool: true, region: { select: { name: true } } } },
+  stages: {
+    select: { tier: true, prizePool: true, countryCode: true, region: { select: { name: true, code: true } } },
+  },
 } satisfies Prisma.TournamentSelect;
 
 type CardRow = Prisma.TournamentGetPayload<{ select: typeof cardSelect }>;
@@ -46,6 +52,8 @@ function toCard(t: CardRow): TournamentCard {
     endAt: t.endAt?.toISOString() ?? null,
     tier: TIER_ORDER.find((tier) => tiers.includes(tier)) ?? "UNRANKED",
     regions: [...new Set(t.stages.flatMap((s) => (s.region ? [s.region.name] : [])))],
+    regionCodes: [...new Set(t.stages.flatMap((s) => (s.region ? [s.region.code] : [])))],
+    countryCodes: [...new Set(t.stages.flatMap((s) => (s.countryCode ? [s.countryCode] : [])))],
     prizePools: [...new Set(t.stages.flatMap((s) => (s.prizePool ? [s.prizePool] : [])))],
   };
 }
@@ -120,7 +128,8 @@ export async function getTournament(slug: string): Promise<TournamentDetail | nu
           prizePool: true,
           beginAt: true,
           endAt: true,
-          region: { select: { name: true } },
+          countryCode: true,
+          region: { select: { name: true, code: true } },
           winner: { select: teamSelect },
           standings: {
             orderBy: [{ rank: "asc" }, { team: { name: "asc" } }],

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { TournamentEmblem } from "@/components/tournament-emblem";
 import { MatchList } from "@/components/match-row";
 import { ListSkeleton, Logo, Reveal, SkeletonExit } from "@/components/ui";
 import { formatRange } from "@/lib/format";
@@ -82,7 +83,15 @@ async function TournamentContent({ params }: { params: Params }) {
     <>
       <HeroHeader
         backdrop={pickBackdrop(t.slug, backdrops)}
-        emblem={<Logo src={t.leagueImageUrl} name={t.league} size={96} />}
+        emblem={
+          <TournamentEmblem
+            name={t.league}
+            imageUrl={t.leagueImageUrl}
+            countryCodes={t.countryCodes}
+            regionCodes={t.regionCodes}
+            size={96}
+          />
+        }
         title={t.name}
       >
         <p>

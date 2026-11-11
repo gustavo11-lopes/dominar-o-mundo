@@ -29,6 +29,7 @@ export type MatchInput = {
     name: string;
     tier: Tier;
     regionCode: string | null;
+    countryCode: string | null;
     prizePool: string | null;
     beginAt: Date | null;
     endAt: Date | null;
@@ -154,6 +155,7 @@ export function mapMatch(m: PsMatch): MatchInput {
       name: m.tournament.name,
       tier: (m.tournament.tier && TIER[m.tournament.tier.toLowerCase()]) || "UNRANKED",
       regionCode: blankToNull(m.tournament.region)?.toUpperCase() ?? null,
+      countryCode: countryCode(m.tournament.country ?? null),
       prizePool: blankToNull(m.tournament.prizepool),
       beginAt: date(m.tournament.begin_at),
       endAt: date(m.tournament.end_at),

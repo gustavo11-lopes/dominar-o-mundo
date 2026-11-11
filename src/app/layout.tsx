@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Big_Shoulders, IBM_Plex_Sans } from "next/font/google";
+import Link from "next/link";
 import { Suspense } from "react";
 import { LiveTicker } from "@/components/live-ticker";
 import { SpotlightCursor } from "@/components/spotlight-cursor";
@@ -44,9 +45,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </div>
         <footer className="border-t border-line">
-          <p className="mx-auto max-w-6xl px-4 py-8 text-xs text-muted">
-            Dados: PandaScore. Projeto de fã, sem vínculo com a Riot Games. VALORANT é marca da Riot Games, Inc.
-          </p>
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-xs text-muted sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-1.5">
+              <p className="text-text/80">© 2026 VALOHUB. Todos os direitos reservados.</p>
+              <p>
+                Projeto acadêmico, gratuito e sem fins comerciais. VALOHUB foi criado seguindo a política do
+                “Lenga-Lenga Jurídico” da Riot Games com recursos pertencentes à Riot Games. A Riot Games não endossa ou
+                patrocina este projeto.
+              </p>
+              <p>Dados: PandaScore.</p>
+            </div>
+            <Link href="/sobre" className="shrink-0 text-sm text-text/85 hover:text-accent">
+              Sobre o projeto
+            </Link>
+          </div>
         </footer>
       </body>
     </html>

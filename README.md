@@ -50,6 +50,12 @@ Tokens de cor e utilitários em `src/app/globals.css`: `panel`/`panel-link` (sup
 A linha de partida usa container query: empilhada em listas estreitas, lado a lado a partir de `@xl`.
 Movimento: só a entrada do confronto na home e a inclinação 3D pelo mouse; ambos desligam com `prefers-reduced-motion`.
 
+## Busca
+
+Times e jogadores são buscados no banco com `search_norm` (sem acento, minúsculas, só letras e números) e índices de trigramas (`pg_trgm`). Relevância: igual > começa com > contém > parecido. A região vem do país informado pela fonte (`src/lib/regions.ts`). Extensões, função e índices estão na migração `busca_e_pais_da_fase`; não remova.
+
+`GET /api/sync?recarregar=MATCHES,TEAMS` refaz a primeira carga desses recursos.
+
 ## Banco
 
 Schema em `prisma/schema.prisma`. CHECKs e o índice parcial de `player_team_stint` estão no SQL da migração,

@@ -14,7 +14,10 @@ describe.skipIf(!url)("syncMatches (Postgres)", () => {
     adapter: new PrismaPg({ connectionString: url! }),
   });
   const all = [...past, ...upcoming];
-  const fixed = (items: unknown[]): MatchFetcher => async () => structuredClone(items);
+  const fixed =
+    (items: unknown[]): MatchFetcher =>
+    async () =>
+      structuredClone(items);
   const counts = async () => ({
     matches: await db.match.count(),
     maps: await db.matchMap.count(),

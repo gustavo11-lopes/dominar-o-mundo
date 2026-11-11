@@ -1,198 +1,198 @@
 [
- {
-  "rank": 1,
-  "team": {
-   "id": 139566,
-   "name": "Aurora Gaming",
-   "location": "",
-   "slug": "aurora-gaming-valorant",
-   "modified_at": "2026-11-09T18:56:28Z",
-   "acronym": null,
-   "image_url": "https://cdn-api.pandascore.co/images/team/image/139566/600px_aurora_gaming_2025_allmode.png",
-   "dark_mode_image_url": null
-  },
-  "last_match": {
-   "id": 1802840,
-   "name": "Grand final: Aurora Gaming vs F9",
-   "status": "finished",
-   "live": {
-    "supported": false,
-    "url": null,
-    "opens_at": null
-   },
-   "slug": "aurora-gaming-2026-11-10",
-   "begin_at": "2026-11-10T18:47:38Z",
-   "detailed_stats": true,
-   "draw": false,
-   "end_at": "2026-11-10T20:55:14Z",
-   "forfeit": false,
-   "winner_id": null,
-   "winner_type": "Team",
-   "tournament_id": 22427,
-   "modified_at": "2026-11-10T21:45:32Z",
-   "match_type": "best_of",
-   "number_of_games": 3,
-   "scheduled_at": "2026-11-10T18:45:00Z",
-   "original_scheduled_at": "2026-11-10T18:30:00Z",
-   "game_advantage": null,
-   "low_latency_feed": false,
-   "streams_list": [
-    {
-     "main": true,
-     "language": "en",
-     "embed_url": "https://player.twitch.tv/?channel=lendothlive",
-     "official": false,
-     "raw_url": "https://www.twitch.tv/lendothlive"
+  {
+    "rank": 1,
+    "team": {
+      "id": 139566,
+      "name": "Aurora Gaming",
+      "location": "",
+      "slug": "aurora-gaming-valorant",
+      "modified_at": "2026-11-09T18:56:28Z",
+      "acronym": null,
+      "image_url": "https://cdn-api.pandascore.co/images/team/image/139566/600px_aurora_gaming_2025_allmode.png",
+      "dark_mode_image_url": null
+    },
+    "last_match": {
+      "id": 1802840,
+      "name": "Grand final: Aurora Gaming vs F9",
+      "status": "finished",
+      "live": {
+        "supported": false,
+        "url": null,
+        "opens_at": null
+      },
+      "slug": "aurora-gaming-2026-11-10",
+      "begin_at": "2026-11-10T18:47:38Z",
+      "detailed_stats": true,
+      "draw": false,
+      "end_at": "2026-11-10T20:55:14Z",
+      "forfeit": false,
+      "winner_id": null,
+      "winner_type": "Team",
+      "tournament_id": 22427,
+      "modified_at": "2026-11-10T21:45:32Z",
+      "match_type": "best_of",
+      "number_of_games": 3,
+      "scheduled_at": "2026-11-10T18:45:00Z",
+      "original_scheduled_at": "2026-11-10T18:30:00Z",
+      "game_advantage": null,
+      "low_latency_feed": false,
+      "streams_list": [
+        {
+          "main": true,
+          "language": "en",
+          "embed_url": "https://player.twitch.tv/?channel=lendothlive",
+          "official": false,
+          "raw_url": "https://www.twitch.tv/lendothlive"
+        }
+      ],
+      "rescheduled": true
     }
-   ],
-   "rescheduled": true
-  }
- },
- {
-  "rank": 2,
-  "team": {
-   "id": 137123,
-   "name": "F9 EICAR",
-   "location": "FR",
-   "slug": "f9-eicar",
-   "modified_at": "2026-11-09T18:56:25Z",
-   "acronym": "F9",
-   "image_url": "https://cdn-api.pandascore.co/images/team/image/137123/700px_f9_eicar_lightmode.png",
-   "dark_mode_image_url": "https://cdn-api.pandascore.co/dark_images/team/dark_image/137123/700px_f9_eicar_darkmode.png"
   },
-  "last_match": {
-   "id": 1802840,
-   "name": "Grand final: Aurora Gaming vs F9",
-   "status": "finished",
-   "live": {
-    "supported": false,
-    "url": null,
-    "opens_at": null
-   },
-   "slug": "aurora-gaming-2026-11-10",
-   "begin_at": "2026-11-10T18:47:38Z",
-   "detailed_stats": true,
-   "draw": false,
-   "end_at": "2026-11-10T20:55:14Z",
-   "forfeit": false,
-   "winner_id": null,
-   "winner_type": "Team",
-   "tournament_id": 22427,
-   "modified_at": "2026-11-10T21:45:32Z",
-   "match_type": "best_of",
-   "number_of_games": 3,
-   "scheduled_at": "2026-11-10T18:45:00Z",
-   "original_scheduled_at": "2026-11-10T18:30:00Z",
-   "game_advantage": null,
-   "low_latency_feed": false,
-   "streams_list": [
-    {
-     "main": true,
-     "language": "en",
-     "embed_url": "https://player.twitch.tv/?channel=lendothlive",
-     "official": false,
-     "raw_url": "https://www.twitch.tv/lendothlive"
+  {
+    "rank": 2,
+    "team": {
+      "id": 137123,
+      "name": "F9 EICAR",
+      "location": "FR",
+      "slug": "f9-eicar",
+      "modified_at": "2026-11-09T18:56:25Z",
+      "acronym": "F9",
+      "image_url": "https://cdn-api.pandascore.co/images/team/image/137123/700px_f9_eicar_lightmode.png",
+      "dark_mode_image_url": "https://cdn-api.pandascore.co/dark_images/team/dark_image/137123/700px_f9_eicar_darkmode.png"
+    },
+    "last_match": {
+      "id": 1802840,
+      "name": "Grand final: Aurora Gaming vs F9",
+      "status": "finished",
+      "live": {
+        "supported": false,
+        "url": null,
+        "opens_at": null
+      },
+      "slug": "aurora-gaming-2026-11-10",
+      "begin_at": "2026-11-10T18:47:38Z",
+      "detailed_stats": true,
+      "draw": false,
+      "end_at": "2026-11-10T20:55:14Z",
+      "forfeit": false,
+      "winner_id": null,
+      "winner_type": "Team",
+      "tournament_id": 22427,
+      "modified_at": "2026-11-10T21:45:32Z",
+      "match_type": "best_of",
+      "number_of_games": 3,
+      "scheduled_at": "2026-11-10T18:45:00Z",
+      "original_scheduled_at": "2026-11-10T18:30:00Z",
+      "game_advantage": null,
+      "low_latency_feed": false,
+      "streams_list": [
+        {
+          "main": true,
+          "language": "en",
+          "embed_url": "https://player.twitch.tv/?channel=lendothlive",
+          "official": false,
+          "raw_url": "https://www.twitch.tv/lendothlive"
+        }
+      ],
+      "rescheduled": true
     }
-   ],
-   "rescheduled": true
-  }
- },
- {
-  "rank": 3,
-  "team": {
-   "id": 136225,
-   "name": "Pixel Lumina",
-   "location": "HU",
-   "slug": "pixel-lumina",
-   "modified_at": "2026-11-09T18:56:27Z",
-   "acronym": "PL",
-   "image_url": "https://cdn-api.pandascore.co/images/team/image/136225/6783b1e6d26f8.png",
-   "dark_mode_image_url": null
   },
-  "last_match": {
-   "id": 1802839,
-   "name": "Semifinal 2: Aurora Gaming vs PL",
-   "status": "finished",
-   "live": {
-    "supported": false,
-    "url": null,
-    "opens_at": null
-   },
-   "slug": "aurora-gaming-vs-pixel-lumina-2026-11-10",
-   "begin_at": "2026-11-10T16:10:25Z",
-   "detailed_stats": true,
-   "draw": false,
-   "end_at": "2026-11-10T17:33:19Z",
-   "forfeit": false,
-   "winner_id": null,
-   "winner_type": "Team",
-   "tournament_id": 22427,
-   "modified_at": "2026-11-10T17:51:38Z",
-   "match_type": "best_of",
-   "number_of_games": 3,
-   "scheduled_at": "2026-11-10T16:00:00Z",
-   "original_scheduled_at": "2026-11-10T16:00:00Z",
-   "game_advantage": null,
-   "low_latency_feed": false,
-   "streams_list": [
-    {
-     "main": true,
-     "language": "en",
-     "embed_url": "https://player.twitch.tv/?channel=pxltv_hu",
-     "official": true,
-     "raw_url": "https://www.twitch.tv/pxltv_hu"
+  {
+    "rank": 3,
+    "team": {
+      "id": 136225,
+      "name": "Pixel Lumina",
+      "location": "HU",
+      "slug": "pixel-lumina",
+      "modified_at": "2026-11-09T18:56:27Z",
+      "acronym": "PL",
+      "image_url": "https://cdn-api.pandascore.co/images/team/image/136225/6783b1e6d26f8.png",
+      "dark_mode_image_url": null
+    },
+    "last_match": {
+      "id": 1802839,
+      "name": "Semifinal 2: Aurora Gaming vs PL",
+      "status": "finished",
+      "live": {
+        "supported": false,
+        "url": null,
+        "opens_at": null
+      },
+      "slug": "aurora-gaming-vs-pixel-lumina-2026-11-10",
+      "begin_at": "2026-11-10T16:10:25Z",
+      "detailed_stats": true,
+      "draw": false,
+      "end_at": "2026-11-10T17:33:19Z",
+      "forfeit": false,
+      "winner_id": null,
+      "winner_type": "Team",
+      "tournament_id": 22427,
+      "modified_at": "2026-11-10T17:51:38Z",
+      "match_type": "best_of",
+      "number_of_games": 3,
+      "scheduled_at": "2026-11-10T16:00:00Z",
+      "original_scheduled_at": "2026-11-10T16:00:00Z",
+      "game_advantage": null,
+      "low_latency_feed": false,
+      "streams_list": [
+        {
+          "main": true,
+          "language": "en",
+          "embed_url": "https://player.twitch.tv/?channel=pxltv_hu",
+          "official": true,
+          "raw_url": "https://www.twitch.tv/pxltv_hu"
+        }
+      ],
+      "rescheduled": false
     }
-   ],
-   "rescheduled": false
-  }
- },
- {
-  "rank": 4,
-  "team": {
-   "id": 139567,
-   "name": "xXxMasterProMegaTeamxXx",
-   "location": "",
-   "slug": "xxxmasterpromegateamxxx",
-   "modified_at": "2026-11-10T17:50:24Z",
-   "acronym": null,
-   "image_url": null,
-   "dark_mode_image_url": null
   },
-  "last_match": {
-   "id": 1802838,
-   "name": "Semifinal 1: xXxMasterProMegaTeamxXx vs F9",
-   "status": "finished",
-   "live": {
-    "supported": false,
-    "url": null,
-    "opens_at": null
-   },
-   "slug": "xxxmasterpromegateamxxx-vs-f9-eicar-2026-11-10",
-   "begin_at": "2026-11-10T16:06:22Z",
-   "detailed_stats": true,
-   "draw": false,
-   "end_at": "2026-11-10T18:10:43Z",
-   "forfeit": false,
-   "winner_id": null,
-   "winner_type": "Team",
-   "tournament_id": 22427,
-   "modified_at": "2026-11-10T18:17:46Z",
-   "match_type": "best_of",
-   "number_of_games": 3,
-   "scheduled_at": "2026-11-10T16:00:00Z",
-   "original_scheduled_at": "2026-11-10T16:00:00Z",
-   "game_advantage": null,
-   "low_latency_feed": false,
-   "streams_list": [
-    {
-     "main": true,
-     "language": "en",
-     "embed_url": "https://player.twitch.tv/?channel=lendothlive",
-     "official": true,
-     "raw_url": "https://www.twitch.tv/lendothlive"
+  {
+    "rank": 4,
+    "team": {
+      "id": 139567,
+      "name": "xXxMasterProMegaTeamxXx",
+      "location": "",
+      "slug": "xxxmasterpromegateamxxx",
+      "modified_at": "2026-11-10T17:50:24Z",
+      "acronym": null,
+      "image_url": null,
+      "dark_mode_image_url": null
+    },
+    "last_match": {
+      "id": 1802838,
+      "name": "Semifinal 1: xXxMasterProMegaTeamxXx vs F9",
+      "status": "finished",
+      "live": {
+        "supported": false,
+        "url": null,
+        "opens_at": null
+      },
+      "slug": "xxxmasterpromegateamxxx-vs-f9-eicar-2026-11-10",
+      "begin_at": "2026-11-10T16:06:22Z",
+      "detailed_stats": true,
+      "draw": false,
+      "end_at": "2026-11-10T18:10:43Z",
+      "forfeit": false,
+      "winner_id": null,
+      "winner_type": "Team",
+      "tournament_id": 22427,
+      "modified_at": "2026-11-10T18:17:46Z",
+      "match_type": "best_of",
+      "number_of_games": 3,
+      "scheduled_at": "2026-11-10T16:00:00Z",
+      "original_scheduled_at": "2026-11-10T16:00:00Z",
+      "game_advantage": null,
+      "low_latency_feed": false,
+      "streams_list": [
+        {
+          "main": true,
+          "language": "en",
+          "embed_url": "https://player.twitch.tv/?channel=lendothlive",
+          "official": true,
+          "raw_url": "https://www.twitch.tv/lendothlive"
+        }
+      ],
+      "rescheduled": false
     }
-   ],
-   "rescheduled": false
   }
- }
 ]

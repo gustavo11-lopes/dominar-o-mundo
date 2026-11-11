@@ -1,7 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
-import { countryName, flag } from "@/lib/format";
+import { countryName } from "@/lib/format";
+import { Flag } from "./flag";
+export { initials, Logo } from "./logo";
 
 export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -63,82 +64,13 @@ export function Empty({ children }: { children: React.ReactNode }) {
   return <p className="border border-dashed border-line px-4 py-12 text-center text-muted">{children}</p>;
 }
 
-/** Busca por GET: funciona sem JavaScript e mantém a URL compartilhável. */
-export function SearchForm({ action, defaultValue, label }: { action: string; defaultValue: string; label: string }) {
-  return (
-    <form action={action} role="search" className="mb-6 flex gap-2">
-      <label htmlFor="q" className="sr-only">
-        {label}
-      </label>
-      <input
-        id="q"
-        name="q"
-        type="search"
-        defaultValue={defaultValue}
-        placeholder={label}
-        maxLength={60}
-        className="min-w-0 flex-1 panel px-3 py-2 text-sm placeholder:text-muted focus:border-muted focus:outline-none"
-      />
-      <button type="submit" className="chamfer-sm bg-text px-4 py-2 text-sm text-bg hover:opacity-90">
-        Buscar
-      </button>
-    </form>
-  );
-}
-
 export function Country({ code }: { code: string | null }) {
   if (!code) return null;
   const name = countryName(code);
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span aria-hidden>{flag(code)}</span>
+      <Flag code={code} />
       {name}
-    </span>
-  );
-}
-
-/** Iniciais para quando a fonte não tem imagem: "KeepBest Gaming" vira "KG", "sibeastw0w" vira "SI". */
-export function initials(name: string) {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  const raw = words.length > 1 ? words[0][0] + words[1][0] : name.trim().slice(0, 2);
-  return raw.toUpperCase();
-}
-
-/**
- * Logo de time/liga ou foto de jogador. Sem imagem, mostra as iniciais num emblema
- * iluminado em vez de um quadrado vazio.
- */
-export function Logo({
-  src,
-  name,
-  size = 28,
-  rounded = false,
-}: {
-  src: string | null;
-  name?: string;
-  size?: number;
-  rounded?: boolean;
-}) {
-  const shape = rounded ? "rounded-full" : "rounded";
-  if (src) {
-    return (
-      <Image
-        src={src}
-        alt=""
-        width={size}
-        height={size}
-        style={{ width: size, height: size }}
-        className={`shrink-0 object-contain ${rounded ? "rounded-full object-cover" : ""}`}
-      />
-    );
-  }
-  return (
-    <span
-      aria-hidden
-      style={{ width: size, height: size, fontSize: Math.max(10, size * 0.4) }}
-      className={`display grid shrink-0 place-items-center border border-line bg-[radial-gradient(circle_at_30%_25%,var(--surface-2),var(--surface))] text-muted ${shape}`}
-    >
-      {name ? initials(name) : null}
     </span>
   );
 }
